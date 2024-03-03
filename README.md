@@ -13,7 +13,7 @@ function App() {
   const render = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
     // Clear the background
     ctx.fillStyle = '#111'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   }
 
   return <Canvas render={render} />
