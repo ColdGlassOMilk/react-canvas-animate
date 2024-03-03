@@ -4,17 +4,13 @@ react-canvas-animate is a minimal HTML Canvas element wrapped in a React compone
 
 ## Minimal Usage
 
-The most basic component to start with
+The most basic component to start with. By default the canvas will init with a `CanvasRenderingContext2D`
 
 ```typescript
 import { Canvas } from 'react-canvas-animate'
 
 function App() {
-  const render = (canvas: HTMLCanvasElement, deltaTime: number) => {
-    // Get a 2D Context
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
+  const render = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
     // Clear the background
     ctx.fillStyle = '#111'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -26,32 +22,31 @@ function App() {
 export default App
 ```
 
-## Example Usage
+## Advanced Usage
 
-A more comprehensive example, showing a glowing circle that spins around the screen
+A more comprehensive example, with all possible props set to their defaults. Specifying any `CanvasContext` (All supported HTML canvas context types) allows more granular control.
 
 ```typescript
-import { Canvas } from 'react-canvas-animate'
+import { useRef } from 'react'
+import { Canvas, type CanvasContext } from 'react-canvas-animate'
+
+type canvas2d = CanvasRenderingContext2D
 
 function App() {
-  let angle = 0 // Initial angle
+  let angle = useRef(0)
   const angularSpeed = Math.PI / 2
 
-  const draw = (canvas: HTMLCanvasElement, time: number) => {
-    // Get a 2D context
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
+  const draw = (ctx: canvas2d, time: number) => {
     // Clear the background
     ctx.fillStyle = '#111'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
     // Calculate the position of the circle
-    const centerX = canvas.width / 2
-    const centerY = canvas.height / 2
+    const centerX = ctx.canvas.width / 2
+    const centerY = ctx.canvas.height / 2
     const radius = Math.floor(centerX / 10)
-    const positionX = centerX + radius * Math.cos(angle)
-    const positionY = centerY + radius * Math.sin(angle)
+    const positionX = centerX + radius * Math.cos(angle.current)
+    const positionY = centerY + radius * Math.sin(angle.current)
 
     // Draw a circle at the calculated position
     ctx.fillStyle = 'aqua'
@@ -63,7 +58,7 @@ function App() {
       positionY - radius / 2,
       radius / 2,
       radius / 2,
-      angle,
+      angle.current,
       0,
       360,
     )
@@ -71,16 +66,21 @@ function App() {
     ctx.closePath()
   }
 
-  const update = (canvas: HTMLCanvasElement, time: number) => {
-    angle += angularSpeed * (time / 1000)
+  const update = (ctx: canvas2d, time: number) => {
+    angle.current += angularSpeed * (time / 1000)
   }
 
   return (
-    <Canvas render={draw} update={update} frameRate={30} fullscreen>
-      Canvas is not supported by your browser
-    </Canvas>
+    <Canvas<canvas2d>
+      init={(canvas: HTMLCanvasElement) => canvas.getContext('2d') as canvas2d}
+      render={draw}
+      update={update}
+      frameRate={60}
+      fullscreen
+    />
   )
 }
 
 export default App
+
 ```

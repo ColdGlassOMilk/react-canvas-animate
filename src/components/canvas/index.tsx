@@ -1,1 +1,1 @@
-export { default as Canvas } from './canvas'
+export { default as Canvas, type CanvasContext } from './canvas'

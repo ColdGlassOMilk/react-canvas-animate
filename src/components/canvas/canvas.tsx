@@ -1,36 +1,60 @@
 import React, { useRef, useCallback, useEffect } from 'react'
 
-interface CanvasProps extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
-  render?: (canvas: HTMLCanvasElement, deltaTime: number) => void
-  update?: (canvas: HTMLCanvasElement, deltaTime: number) => void
+export type CanvasContext =
+  | CanvasRenderingContext2D
+  | WebGLRenderingContext
+  | WebGL2RenderingContext
+  | ImageBitmapRenderingContext
+
+interface CanvasProps<T extends CanvasContext = CanvasRenderingContext2D>
+  extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
+  init?: (canvas: HTMLCanvasElement) => T
+  render?: (context: T, deltaTime: number) => void
+  update?: (context: T, deltaTime: number) => void
   fullscreen?: boolean
   frameRate?: number
 }
 
-const Canvas: React.FC<CanvasProps> = ({
+const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
+  init,
   render,
   update,
   fullscreen,
   frameRate,
   children,
   ...rest
-}) => {
+}: CanvasProps<T>) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const contextRef = useRef<T>()
   const renderTimeRef = useRef<number>(performance.now())
   const updateTimeRef = useRef<number>(performance.now())
+
+  //
+  // Init Callback - Sets up context
+  //
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    if (init) {
+      contextRef.current = init(canvas)
+    } else {
+      contextRef.current = canvas.getContext('2d') as T
+    }
+  }, [init])
 
   //
   // Render Callback
   //
   const renderCallback = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const context = contextRef.current
+    if (!context) return
 
     const currentTime = performance.now()
     const deltaTime = currentTime - renderTimeRef.current
     renderTimeRef.current = currentTime
 
-    if (render) render(canvas, deltaTime)
+    if (render) render(context, deltaTime)
   }, [render])
 
   //
@@ -56,14 +80,14 @@ const Canvas: React.FC<CanvasProps> = ({
     if (!update) return
 
     const updateLoop = () => {
-      const canvas = canvasRef.current
-      if (!canvas || !update) return
+      const context = contextRef.current
+      if (!context || !update) return
 
       const currentTime = performance.now()
       const deltaTime = currentTime - updateTimeRef.current
       updateTimeRef.current = currentTime
 
-      update(canvas, deltaTime)
+      update(context, deltaTime)
 
       setTimeout(updateLoop, 1000 / (frameRate || 60))
     }
