@@ -10,6 +10,7 @@
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "start": "npm run dev & npm run --prefix ./demo start",
     "dev": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
