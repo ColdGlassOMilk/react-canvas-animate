@@ -1,0 +1,48 @@
+{
+  "name": "react-canvas-animate",
+  "version": "1.0.0",
+  "description": "React canvas wrapper with additional functionality for rendering animation. Includes Typescript and commonJS support.",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColdGlassOMilk/react-canvas-animate.git"
+  },
+  "keywords": [
+    "react",
+    "canvas",
+    "animate",
+    "animation",
+    "draw",
+    "render",
+    "opengl",
+    "2d",
+    "3d"
+  ],
+  "author": "Nicholaus Brabant",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^18.2.61",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ]
+}
