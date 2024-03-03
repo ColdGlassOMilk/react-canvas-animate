@@ -24,56 +24,39 @@ export default App
 
 ## Advanced Usage
 
-A more comprehensive example, with all possible props set to their defaults. Specifying any `CanvasContext` (All supported HTML canvas context types) allows more granular control.
+A more comprehensive example initializing an OpenGL context
 
 ```typescript
-import { useRef } from 'react'
-import { Canvas, type CanvasContext } from 'react-canvas-animate'
+import { Canvas } from 'react-canvas-animate'
 
-type canvas2d = CanvasRenderingContext2D
+type WebGL = WebGLRenderingContext
 
 function App() {
-  let angle = useRef(0)
-  const angularSpeed = Math.PI / 2
+  const init = (canvas: HTMLCanvasElement) => {
+    const gl = canvas.getContext('webgl', {
+      antialias: true,
+      desyncronized: true
+    }) as WebGL
 
-  const draw = (ctx: canvas2d, time: number) => {
-    // Clear the background
-    ctx.fillStyle = '#111'
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+    gl.clearColor(0.1, 0.1, 0.1, 1.0)
+    gl.enable(gl.DEPTH_TEST)
 
-    // Calculate the position of the circle
-    const centerX = ctx.canvas.width / 2
-    const centerY = ctx.canvas.height / 2
-    const radius = Math.floor(centerX / 10)
-    const positionX = centerX + radius * Math.cos(angle.current)
-    const positionY = centerY + radius * Math.sin(angle.current)
-
-    // Draw a circle at the calculated position
-    ctx.fillStyle = 'aqua'
-    ctx.shadowBlur = radius
-    ctx.shadowColor = 'aqua'
-    ctx.beginPath()
-    ctx.ellipse(
-      positionX - radius / 2,
-      positionY - radius / 2,
-      radius / 2,
-      radius / 2,
-      angle.current,
-      0,
-      360,
-    )
-    ctx.fill()
-    ctx.closePath()
+    return gl
   }
 
-  const update = (ctx: canvas2d, time: number) => {
-    angle.current += angularSpeed * (time / 1000)
+  const render = (gl: WebGL, deltaTime: number) => {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  }
+
+  const update = (gl: WebGL, deltaTime: number) => {
+    // Perform calculations
   }
 
   return (
-    <Canvas<canvas2d>
-      init={(canvas: HTMLCanvasElement) => canvas.getContext('2d') as canvas2d}
-      render={draw}
+    <Canvas<WebGL>
+      init={init}
+      render={render}
       update={update}
       frameRate={60}
       fullscreen
@@ -82,5 +65,4 @@ function App() {
 }
 
 export default App
-
 ```
