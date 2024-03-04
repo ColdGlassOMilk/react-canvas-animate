@@ -83,55 +83,33 @@ The `events` prop accepts an object structured as
 #### Example
 
 ```ts
-import { useState, useRef } from "react";
 import { Canvas } from "react-canvas-animate";
 
-type Context2d = CanvasRenderingContext2D;
-type Vec2D = {
-  x: number;
-  y: number;
-};
+type Context2D = CanvasRenderingContext2D;
 
 function App() {
-  const [fullscreen, setFullscreen] = useState<boolean>(true);
-  const cursorPosition = useRef<Vec2D>({ x: 0, y: 0 });
+  const cursorPos = { x: 0, y: 0 };
 
-  const render = (ctx: Context2d, time: number) => {
-    // Clear the background
-    ctx.fillStyle = "#111";
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  const render = (ctx: Context2D, time: number) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillStyle = "red";
 
-    // Draw a square at the cursor position
-    const clientRect = ctx.canvas.getBoundingClientRect();
-    ctx.fillStyle = "aqua";
+    const rect = ctx.canvas.getBoundingClientRect();
     ctx.fillRect(
-      cursorPosition.current.x - 5 - clientRect.left,
-      cursorPosition.current.y - 5 - clientRect.top,
-      10,
-      10,
+      cursorPos.x - 10 - rect.left,
+      cursorPos.y - 10 - rect.top,
+      20,
+      20,
     );
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    cursorPosition.current = {
-      x: event.clientX,
-      y: event.clientY,
-    };
-  };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case "f":
-        setFullscreen(!fullscreen);
-        break;
-    }
+    cursorPos.x = event.clientX;
+    cursorPos.y = event.clientY;
   };
 
   const handleEvent = (event: Event) => {
     switch (event.type) {
-      case "keydown":
-        handleKeyDown(event as KeyboardEvent);
-        break;
       case "mousemove":
         handleMouseMove(event as MouseEvent);
         break;
@@ -140,9 +118,9 @@ function App() {
 
   return (
     <Canvas
-      events={{ handleEvent, eventTypes: ["keydown", "mousemove"] }}
-      fullscreen={fullscreen}
+      events={{ handleEvent, eventTypes: ["mousemove"] }}
       render={render}
+      fullscreen
     />
   );
 }
