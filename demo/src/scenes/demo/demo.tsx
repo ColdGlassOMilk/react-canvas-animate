@@ -37,8 +37,9 @@ const DemoScene = () => {
     const deltaTime = time / 1000
 
     // Calculate the difference between current position and mouse position
-    const dx = mouseRef.current.x - blockPosition.current.x
-    const dy = mouseRef.current.y - blockPosition.current.y
+    const rect = ctx.canvas.getBoundingClientRect()
+    const dx = mouseRef.current.x - rect.left - blockPosition.current.x
+    const dy = mouseRef.current.y - rect.top - blockPosition.current.y
 
     // Calculate the movement based on deltaTime and smoothing factor
     const moveX = dx * deltaTime * smoothingFactor
@@ -57,18 +58,17 @@ const DemoScene = () => {
     }
   }
 
-  function handleMouseMove(ctx: Context2D, event: MouseEvent) {
-    const rect = ctx.canvas.getBoundingClientRect()
+  function handleMouseMove(event: MouseEvent) {
     mouseRef.current = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
+      x: event.clientX,
+      y: event.clientY,
     }
   }
 
-  function handleEvent(ctx: Context2D, event: any) {
+  function handleEvent(event: Event) {
     switch (event.type) {
       case 'mousemove':
-        handleMouseMove(ctx, event)
+        handleMouseMove(event as MouseEvent)
         break
     }
   }

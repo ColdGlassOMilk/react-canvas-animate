@@ -75,7 +75,7 @@ The `events` prop accepts an object structured as
 
 ```ts
 {
-  function (context, event) => void,
+  function (event) => void,
   eventTypes: string[]
 }
 ```
@@ -83,45 +83,80 @@ The `events` prop accepts an object structured as
 #### Example
 
 ```ts
-import { Canvas } from 'react-canvas-animate'
+import { useState, useRef } from "react";
+import { Canvas } from "react-canvas-animate";
 
-type canvas2d = CanvasRenderingContext2D
+type context2d = CanvasRenderingContext2D;
+type Vec2D = {
+  x: number;
+  y: number;
+};
 
-const App = () => {
-  const handleMouseMove = (ctx: canvas2d, event: MouseEvent) => {
-    const rect = ctx.canvas.getBoundingClientRect()
-    console.log({
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    })
-  }
+function App() {
+  const [fullscreen, setFullscreen] = useState<boolean>(true);
+  const cursorPosition = useRef<Vec2D>({ x: 0, y: 0 });
+
+  const init = (canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext("2d", { desyncronized: true }) as context2d;
+
+    cursorPosition.current = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+    };
+
+    return ctx;
+  };
+
+  const render = (ctx: context2d, time: number) => {
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    // Draw a square at the cursor position
+    const clientRect = ctx.canvas.getBoundingClientRect();
+    ctx.fillStyle = "aqua";
+    ctx.fillRect(
+      cursorPosition.current.x - 5 - clientRect.left,
+      cursorPosition.current.y - 5 - clientRect.top,
+      10,
+      10,
+    );
+  };
+
+  const handleMouseMove = (event: MouseEvent) => {
+    cursorPosition.current = {
+      x: event.clientX,
+      y: event.clientY,
+    };
+  };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    console.log(`Key Event: '${event.key}'`)
-  }
-
-  const handleEvent = (ctx: canvas2d, event: any) => {
-    switch (event.type) {
-      case 'mousemove':
-        handleMouseMove(ctx, event)
-        break
-      case 'keydown':
-        handleKeyDown(event)
-        break
-      default:
-        console.log('Unprocessed Event: ' + event.type)
+    switch (event.key) {
+      case "f":
+        setFullscreen(!fullscreen);
+        break;
     }
-  }
+  };
+
+  const handleEvent = (event: Event) => {
+    switch (event.type) {
+      case "keydown":
+        handleKeyDown(event as KeyboardEvent);
+        break;
+      case "mousemove":
+        handleMouseMove(event as MouseEvent);
+        break;
+    }
+  };
 
   return (
     <Canvas
-      events={{
-        handleEvent,
-        eventTypes: ['click', 'mousemove', 'keydown'],
-      }}
+      events={{ handleEvent, eventTypes: ["keydown", "mousemove"] }}
+      fullscreen={fullscreen}
+      init={init}
+      render={render}
     />
-  )
+  );
 }
 
-export default App
+export default App;
 ```

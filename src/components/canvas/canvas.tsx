@@ -6,8 +6,8 @@ export type CanvasContext =
   | WebGL2RenderingContext
   | ImageBitmapRenderingContext
 
-interface EventCallback<T extends CanvasContext> {
-  handleEvent: (context: T, event: Event) => void
+interface EventCallback {
+  handleEvent: (event: Event) => void
   eventTypes: string[]
 }
 
@@ -24,7 +24,7 @@ interface CanvasProps<T extends CanvasContext = CanvasRenderingContext2D>
   init?: (canvas: HTMLCanvasElement) => T
   render?: (context: T, deltaTime: number) => void
   update?: (context: T, deltaTime: number) => void
-  events?: EventCallback<T>
+  events?: EventCallback
   fullscreen?: boolean
   frameRate?: number
 }
@@ -55,7 +55,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     if (init) {
       contextRef.current = init(canvas)
     } else {
-      contextRef.current = canvas.getContext('2d') as T
+      contextRef.current = canvas.getContext('2d', { desyncronized: true }) as T
     }
   }, [init])
 
@@ -169,7 +169,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     if (!events || !context) return
 
     const eventHandler = (event: Event) => {
-      events.handleEvent(context, event)
+      events.handleEvent(event)
     }
 
     const addEventListeners = () => {
