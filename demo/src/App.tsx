@@ -41,9 +41,38 @@ function App() {
     angle.current += angularSpeed * (time / 1000)
   }
 
+  const handleMouseMove = (ctx: canvas2d, event: MouseEvent) => {
+    const rect = ctx.canvas.getBoundingClientRect()
+    console.log({
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    })
+  }
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    console.log(`Key Event: '${event.key}'`)
+  }
+
+  const handleEvent = (ctx: canvas2d, event: any) => {
+    switch (event.type) {
+      case 'mousemove':
+        handleMouseMove(ctx, event)
+        break
+      case 'keydown':
+        handleKeyDown(event)
+        break
+      default:
+        console.log('Unprocessed Event: ' + event.type)
+    }
+  }
+
   return (
     <Canvas<canvas2d>
       init={(canvas: HTMLCanvasElement) => canvas.getContext('2d') as canvas2d}
+      events={{
+        handleEvent,
+        eventTypes: ['click', 'mousemove', 'keydown'],
+      }}
       render={draw}
       update={update}
       frameRate={60}

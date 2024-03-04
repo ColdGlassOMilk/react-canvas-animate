@@ -6,11 +6,17 @@ export type CanvasContext =
   | WebGL2RenderingContext
   | ImageBitmapRenderingContext
 
+interface EventCallback<T extends CanvasContext> {
+  handleEvent: (context: T, event: Event) => void
+  eventTypes: string[]
+}
+
 interface CanvasProps<T extends CanvasContext = CanvasRenderingContext2D>
   extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   init?: (canvas: HTMLCanvasElement) => T
   render?: (context: T, deltaTime: number) => void
   update?: (context: T, deltaTime: number) => void
+  events?: EventCallback<T>
   fullscreen?: boolean
   frameRate?: number
 }
@@ -19,6 +25,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   init,
   render,
   update,
+  events,
   fullscreen,
   frameRate,
   children,
@@ -81,7 +88,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
 
     const updateLoop = () => {
       const context = contextRef.current
-      if (!context || !update) return
+      if (!context) return
 
       const currentTime = performance.now()
       const deltaTime = currentTime - updateTimeRef.current
@@ -119,9 +126,38 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     return () => window.removeEventListener('resize', resizeCanvas)
   }, [fullscreen])
 
+  //
+  // Handle Events
+  //
+  useEffect(() => {
+    const context = contextRef.current
+    if (!events || !context) return
+
+    const eventHandler = (event: Event) => {
+      events.handleEvent(context, event)
+    }
+
+    const addEventListeners = () => {
+      events.eventTypes.forEach((eventType) => {
+        context.canvas.addEventListener(eventType, eventHandler)
+      })
+    }
+
+    const removeEventListeners = () => {
+      events.eventTypes.forEach((eventType) => {
+        context.canvas.removeEventListener(eventType, eventHandler)
+      })
+    }
+
+    addEventListeners()
+
+    return () => removeEventListeners()
+  }, [events])
+
   return (
     <canvas
       ref={canvasRef}
+      tabIndex={0}
       style={{
         backgroundColor: 'magenta',
         position: fullscreen ? 'fixed' : undefined,

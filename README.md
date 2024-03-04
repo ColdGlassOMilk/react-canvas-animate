@@ -46,7 +46,7 @@ function App() {
   }
 
   const render = (gl: WebGL, deltaTime: number) => {
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   }
 
   const update = (gl: WebGL, deltaTime: number) => {
@@ -60,6 +60,65 @@ function App() {
       update={update}
       frameRate={60}
       fullscreen
+    />
+  )
+}
+
+export default App
+```
+
+## Handle Events
+
+Some functionality is included to attach event listeners to the canvas.
+
+The `events` prop accepts an object structured as
+
+```ts
+{
+  function (context, event) => void,
+  eventTypes: string[]
+}
+```
+
+#### Example
+
+```ts
+import { Canvas } from 'react-canvas-animate'
+
+type canvas2d = CanvasRenderingContext2D
+
+const App = () => {
+  const handleMouseMove = (ctx: canvas2d, event: MouseEvent) => {
+    const rect = ctx.canvas.getBoundingClientRect()
+    console.log({
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    })
+  }
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    console.log(`Key Event: '${event.key}'`)
+  }
+
+  const handleEvent = (ctx: canvas2d, event: any) => {
+    switch (event.type) {
+      case 'mousemove':
+        handleMouseMove(ctx, event)
+        break
+      case 'keydown':
+        handleKeyDown(event)
+        break
+      default:
+        console.log('Unprocessed Event: ' + event.type)
+    }
+  }
+
+  return (
+    <Canvas
+      events={{
+        handleEvent,
+        eventTypes: ['click', 'mousemove', 'keydown'],
+      }}
     />
   )
 }
