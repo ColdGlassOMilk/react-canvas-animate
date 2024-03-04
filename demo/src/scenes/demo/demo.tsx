@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Canvas } from 'react-canvas-animate'
 
 type Context2D = CanvasRenderingContext2D
@@ -8,6 +8,7 @@ type Vec2D = {
 }
 
 const DemoScene = () => {
+  const [fullscreen, setFullscreen] = useState<boolean>(true)
   const angleRef = useRef(0)
   const mouseRef = useRef<Vec2D>({ x: 0, y: 0 })
   const blockPosition = useRef<Vec2D>({ x: 0, y: 0 })
@@ -65,20 +66,31 @@ const DemoScene = () => {
     }
   }
 
+  function handleKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'f':
+        setFullscreen(!fullscreen)
+        break
+    }
+  }
+
   function handleEvent(event: Event) {
     switch (event.type) {
       case 'mousemove':
         handleMouseMove(event as MouseEvent)
+        break
+      case 'keydown':
+        handleKeyDown(event as KeyboardEvent)
         break
     }
   }
 
   return (
     <Canvas
-      events={{ handleEvent, eventTypes: ['mousemove'] }}
+      events={{ handleEvent, eventTypes: ['mousemove', 'keydown'] }}
       render={render}
       update={update}
-      fullscreen
+      fullscreen={fullscreen}
     />
   )
 }

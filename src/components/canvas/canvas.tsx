@@ -45,23 +45,10 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   const updateTimeRef = useRef<number>(performance.now())
   const dimensionsRef = useRef<CanvasDimensions | null>(null)
 
-  //
-  // Init Callback - Sets up context
-  //
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+  // Callbacks
+  // --------------
 
-    if (init) {
-      contextRef.current = init(canvas)
-    } else {
-      contextRef.current = canvas.getContext('2d', { desyncronized: true }) as T
-    }
-  }, [init])
-
-  //
-  // Render Callback
-  //
+  // Callback for rendering canvas content
   const renderCallback = useCallback(() => {
     const context = contextRef.current
     if (!context) return
@@ -73,29 +60,25 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     if (render) render(context, deltaTime)
   }, [render])
 
-  //
-  // Render Loop
-  //
-  useEffect(() => {
+  // Callback for rendering loop
+  const renderLoop = useCallback(() => {
     let animationFrame: number
 
-    const renderLoop = () => {
-      animationFrame = requestAnimationFrame(renderLoop)
+    const loop = () => {
+      animationFrame = requestAnimationFrame(loop)
       renderCallback()
     }
 
-    renderLoop()
+    loop()
 
     return () => cancelAnimationFrame(animationFrame)
   }, [renderCallback])
 
-  //
-  // Update Loop
-  //
-  useEffect(() => {
+  // Callback for updating canvas content
+  const updateLoop = useCallback(() => {
     if (!update) return
 
-    const updateLoop = () => {
+    const loop = () => {
       const context = contextRef.current
       if (!context) return
 
@@ -105,72 +88,90 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
 
       update(context, deltaTime)
 
-      setTimeout(updateLoop, 1000 / (frameRate || 60))
+      setTimeout(loop, 1000 / (frameRate || 60))
     }
 
-    updateLoop()
+    loop()
 
     return () => {} // No cleanup needed for setTimeout
-  }, [update])
+  }, [update, frameRate])
 
-  //
-  // Handle Fullscreen Mode & Resize Events
-  //
+  // Callback for handling canvas resize
+  const resizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    if (fullscreen) {
+      if (!dimensionsRef.current) {
+        dimensionsRef.current = {
+          width: canvas.width,
+          height: canvas.height,
+          position: canvas.style.position,
+          top: canvas.style.top,
+          left: canvas.style.left,
+        }
+      }
+
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      canvas.style.position = 'fixed'
+      canvas.style.top = '0'
+      canvas.style.left = '0'
+    } else {
+      if (dimensionsRef.current) {
+        const { width, height, position, top, left } = dimensionsRef.current
+        canvas.width = width
+        canvas.height = height
+        canvas.style.position = position
+        canvas.style.top = top
+        canvas.style.left = left
+
+        dimensionsRef.current = null
+      }
+    }
+  }, [fullscreen])
+
+  // Callback for handling events
+  const eventHandler = useCallback(
+    (event: Event) => {
+      if (events) events.handleEvent(event)
+    },
+    [events],
+  )
+
+  // Effect Hooks
+  // --------------
+
+  // Initialize canvas context
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const resizeCanvas = () => {
-      if (fullscreen) {
-        // Store original dimensions and position if not already stored
-        if (!dimensionsRef.current) {
-          dimensionsRef.current = {
-            width: canvas.width,
-            height: canvas.height,
-            position: canvas.style.position,
-            top: canvas.style.top,
-            left: canvas.style.left,
-          }
-        }
-
-        // Set canvas to fullscreen
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
-        canvas.style.position = 'fixed'
-        canvas.style.top = '0'
-        canvas.style.left = '0'
-      } else {
-        // Reset to original dimensions and position
-        if (dimensionsRef.current) {
-          const { width, height, position, top, left } = dimensionsRef.current
-          canvas.width = width
-          canvas.height = height
-          canvas.style.position = position
-          canvas.style.top = top
-          canvas.style.left = left
-
-          // Clear original dimensions
-          dimensionsRef.current = null
-        }
-      }
+    if (init) {
+      contextRef.current = init(canvas)
+    } else {
+      contextRef.current = canvas.getContext('2d', { desyncronized: true }) as T
     }
+  }, [init])
 
+  // Start rendering loop
+  useEffect(renderLoop, [renderLoop])
+
+  // Start update loop
+  useEffect(updateLoop, [updateLoop])
+
+  // Handle fullscreen mode & resize events
+  useEffect(() => {
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
 
     return () => window.removeEventListener('resize', resizeCanvas)
-  }, [fullscreen])
+  }, [fullscreen, resizeCanvas])
 
-  //
-  // Handle Events
-  //
+  // Handle canvas events
   useEffect(() => {
     const context = contextRef.current
     if (!events || !context) return
-
-    const eventHandler = (event: Event) => {
-      events.handleEvent(event)
-    }
 
     const addEventListeners = () => {
       events.eventTypes.forEach((eventType) => {
@@ -187,15 +188,18 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [events])
+  }, [events, eventHandler])
+
+  const canvasStyle = {
+    backgroundColor: 'magenta' /* Fallback color */,
+    background:
+      'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
+    backgroundSize: '20px 20px',
+    backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+  }
 
   return (
-    <canvas
-      ref={canvasRef}
-      tabIndex={0}
-      style={{ backgroundColor: 'magenta' }}
-      {...rest}
-    >
+    <canvas ref={canvasRef} tabIndex={0} style={canvasStyle} {...rest}>
       {children}
     </canvas>
   )

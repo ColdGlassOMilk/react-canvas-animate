@@ -75,7 +75,7 @@ The `events` prop accepts an object structured as
 
 ```ts
 {
-  function (event) => void,
+  function (event: Event) => void,
   eventTypes: string[]
 }
 ```
@@ -86,7 +86,7 @@ The `events` prop accepts an object structured as
 import { useState, useRef } from "react";
 import { Canvas } from "react-canvas-animate";
 
-type context2d = CanvasRenderingContext2D;
+type Context2d = CanvasRenderingContext2D;
 type Vec2D = {
   x: number;
   y: number;
@@ -96,18 +96,8 @@ function App() {
   const [fullscreen, setFullscreen] = useState<boolean>(true);
   const cursorPosition = useRef<Vec2D>({ x: 0, y: 0 });
 
-  const init = (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext("2d", { desyncronized: true }) as context2d;
-
-    cursorPosition.current = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-    };
-
-    return ctx;
-  };
-
-  const render = (ctx: context2d, time: number) => {
+  const render = (ctx: Context2d, time: number) => {
+    // Clear the background
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -152,7 +142,6 @@ function App() {
     <Canvas
       events={{ handleEvent, eventTypes: ["keydown", "mousemove"] }}
       fullscreen={fullscreen}
-      init={init}
       render={render}
     />
   );
