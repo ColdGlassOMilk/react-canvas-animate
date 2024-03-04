@@ -11,6 +11,14 @@ interface EventCallback<T extends CanvasContext> {
   eventTypes: string[]
 }
 
+interface CanvasDimensions {
+  width: number
+  height: number
+  position: string
+  top: string
+  left: string
+}
+
 interface CanvasProps<T extends CanvasContext = CanvasRenderingContext2D>
   extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   init?: (canvas: HTMLCanvasElement) => T
@@ -35,6 +43,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   const contextRef = useRef<T>()
   const renderTimeRef = useRef<number>(performance.now())
   const updateTimeRef = useRef<number>(performance.now())
+  const dimensionsRef = useRef<CanvasDimensions | null>(null)
 
   //
   // Init Callback - Sets up context
@@ -113,10 +122,36 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
 
     const resizeCanvas = () => {
       if (fullscreen) {
+        // Store original dimensions and position if not already stored
+        if (!dimensionsRef.current) {
+          dimensionsRef.current = {
+            width: canvas.width,
+            height: canvas.height,
+            position: canvas.style.position,
+            top: canvas.style.top,
+            left: canvas.style.left,
+          }
+        }
+
+        // Set canvas to fullscreen
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
+        canvas.style.position = 'fixed'
+        canvas.style.top = '0'
+        canvas.style.left = '0'
       } else {
-        // reset dimensions somehow, use props? undefined?
+        // Reset to original dimensions and position
+        if (dimensionsRef.current) {
+          const { width, height, position, top, left } = dimensionsRef.current
+          canvas.width = width
+          canvas.height = height
+          canvas.style.position = position
+          canvas.style.top = top
+          canvas.style.left = left
+
+          // Clear original dimensions
+          dimensionsRef.current = null
+        }
       }
     }
 
@@ -158,10 +193,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     <canvas
       ref={canvasRef}
       tabIndex={0}
-      style={{
-        backgroundColor: 'magenta',
-        position: fullscreen ? 'fixed' : undefined,
-      }}
+      style={{ backgroundColor: 'magenta' }}
       {...rest}
     >
       {children}
