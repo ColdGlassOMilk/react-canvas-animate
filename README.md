@@ -2,14 +2,14 @@
 
 react-canvas-animate is a minimal HTML Canvas element wrapped in a React component with some additional helpers specifically for animation. Includes support for both Typescript and CommonJS.
 
-## Minimal Usage
+## Getting Started
 
 The most basic component to start with. By default the canvas will init with a `CanvasRenderingContext2D`
 
 ```typescript
 import { Canvas } from 'react-canvas-animate'
 
-function App() {
+export default function App() {
   const render = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
     // Clear the background
     ctx.fillStyle = '#111'
@@ -18,11 +18,69 @@ function App() {
 
   return <Canvas render={render} />
 }
-
-export default App
 ```
 
-## Advanced Usage
+## Available Props
+
+`CanvasContext` - Specify any of the available HTMLCanvasElement contextTypes - [HTMLCanvasElement Docs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext)
+
+By default, a `CanvasRenderingContext2D` is created, but you can override this with the `init` callback. To replicate the default behavior:
+
+```tsx
+import { Canvas } from 'react-canvas-animate'
+
+type Context2D = CanvasRenderingContext2D
+
+export default function App() {
+  // Return the context as the expected type
+  const init = (canvas: HTMLCanvasElement) =>
+    canvas.getContext('2d') as Context2D
+
+  // Callbacks will receive the specified context type
+  const render = (context: Context2D, deltaTime: number) => {}
+
+  return (
+    <Canvas<Context2D> // Define the context type that will be used
+      init={init}
+      render={render}
+    />
+  )
+}
+```
+
+#### Callbacks
+
+- `init` (canvas: HTMLCanvasElement) => CanvasContext
+
+  Init is used to setup a custom rendering context, return the context to be used for rendering
+
+- `render` (context: CanvasContext, deltaTime: number) => void
+
+  Render is automatically synced to the display refresh rate
+
+- `update` (context: CanvasContext, deltaTime: number) => void
+
+  Update is called by default at 60 times per second, update loop is de-coupled from rendering. Adjust using the `frameRate` prop
+
+- `events` { handleEvent: Event, eventTypes: string[] }
+
+  Event listener callback (see "Handle Events" section below)
+
+#### Props
+
+All available `HTMLCanvasElement` props are passed to the underlying canvas element. So things like `height`, `width`, `style`, and `children` can all be passed.
+
+Additional props are defined as:
+
+- `fullscreen` boolean
+
+  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed. Override with `style={{ position: 'absolute' }}`
+
+- `frameRate` number
+
+  Default is 60. Does not affect actual render framerate as that is locked to screen refresh rate. Only affects timeout of update callback.
+
+## Example
 
 A more comprehensive example initializing an OpenGL context
 
@@ -31,7 +89,7 @@ import { Canvas } from 'react-canvas-animate'
 
 type WebGL = WebGLRenderingContext
 
-function App() {
+export default function App() {
   const init = (canvas: HTMLCanvasElement) => {
     const gl = canvas.getContext('webgl', {
       antialias: true,
@@ -58,13 +116,10 @@ function App() {
       init={init}
       render={render}
       update={update}
-      frameRate={60}
       fullscreen
     />
   )
 }
-
-export default App
 ```
 
 ## Handle Events
@@ -75,7 +130,7 @@ The `events` prop accepts an object structured as
 
 ```ts
 {
-  function (event: Event) => void,
+  handleEvent: (event: Event) => void,
   eventTypes: string[]
 }
 ```
@@ -83,47 +138,65 @@ The `events` prop accepts an object structured as
 #### Example
 
 ```ts
-import { Canvas } from "react-canvas-animate";
+import { useState, useRef } from 'react'
+import { Canvas } from 'react-canvas-animate'
 
-type Context2D = CanvasRenderingContext2D;
+type Context2D = CanvasRenderingContext2D
 
-function App() {
-  const cursorPos = { x: 0, y: 0 };
+export default function App() {
+  const [fullscreen, setFullscreen] = useState(false)
+  const cursorRef = useRef({ x: 0, y: 0 })
 
   const render = (ctx: Context2D, time: number) => {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = "red";
+    // Clear the screen
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    const rect = ctx.canvas.getBoundingClientRect();
+    // Draw a square at the cursor position
+    const clientRect = ctx.canvas.getBoundingClientRect()
+    ctx.fillStyle = 'red'
     ctx.fillRect(
-      cursorPos.x - 10 - rect.left,
-      cursorPos.y - 10 - rect.top,
+      cursorRef.current.x - 10 - clientRect.left,
+      cursorRef.current.y - 10 - clientRect.top,
       20,
       20,
-    );
-  };
+    )
+  }
 
   const handleMouseMove = (event: MouseEvent) => {
-    cursorPos.x = event.clientX;
-    cursorPos.y = event.clientY;
-  };
+    cursorRef.current = {
+      x: event.clientX,
+      y: event.clientY
+    }
+  }
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    switch (event.key.toLowerCase()) {
+      case 'escape':
+        setFullscreen(false)
+        break
+      case 'f':
+        setFullscreen(!fullscreen)
+        break
+    }
+  }
 
   const handleEvent = (event: Event) => {
     switch (event.type) {
-      case "mousemove":
-        handleMouseMove(event as MouseEvent);
-        break;
+      case 'keydown':
+        handleKeyDown(event as KeyboardEvent)
+        break
+      case 'mousemove':
+        handleMouseMove(event as MouseEvent)
+        break
     }
-  };
+  }
 
   return (
     <Canvas
-      events={{ handleEvent, eventTypes: ["mousemove"] }}
+      events={{ handleEvent, eventTypes: ['keydown', 'mousemove'] }}
+      fullscreen={fullscreen}
       render={render}
-      fullscreen
     />
-  );
+  )
 }
-
-export default App;
 ```

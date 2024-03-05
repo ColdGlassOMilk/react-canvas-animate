@@ -191,7 +191,8 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   }, [events, eventHandler])
 
   const canvasStyle = {
-    backgroundColor: 'magenta' /* Fallback color */,
+    outline: 'none', // Hide tab-index border
+    backgroundColor: 'magenta', // Fallback color
     background:
       'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
     backgroundSize: '20px 20px',

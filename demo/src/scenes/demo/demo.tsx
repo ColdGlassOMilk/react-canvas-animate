@@ -21,17 +21,20 @@ const DemoScene = () => {
   function render(ctx: Context2D, time: number) {
     const canvas = ctx.canvas
     ctx.fillStyle = '#111'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.fillRect(20, 20, canvas.width - 40, canvas.height - 40)
 
     let pos: Vec2D = {
       x: blockPosition.current.x + Math.cos(angleRef.current) * radius,
       y: blockPosition.current.y + Math.sin(angleRef.current) * radius,
     }
 
+    ctx.save()
     ctx.fillStyle = 'aqua'
     ctx.shadowBlur = blockSize / 3
     ctx.shadowColor = ctx.fillStyle
     ctx.fillRect(pos.x, pos.y, blockSize, blockSize)
+    ctx.restore()
   }
 
   function update(ctx: Context2D, time: number) {
@@ -67,7 +70,10 @@ const DemoScene = () => {
   }
 
   function handleKeyDown(event: KeyboardEvent) {
-    switch (event.key) {
+    switch (event.key.toLowerCase()) {
+      case 'escape':
+        setFullscreen(false)
+        break
       case 'f':
         setFullscreen(!fullscreen)
         break
@@ -91,6 +97,8 @@ const DemoScene = () => {
       render={render}
       update={update}
       fullscreen={fullscreen}
+      width={640}
+      height={480}
     />
   )
 }
