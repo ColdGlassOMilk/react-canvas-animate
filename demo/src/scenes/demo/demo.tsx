@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Canvas } from 'react-canvas-animate'
+import Canvas from 'react-canvas-animate'
 
 type Context2D = CanvasRenderingContext2D
 type Vec2D = {
@@ -99,6 +99,8 @@ const DemoScene = () => {
       fullscreen={fullscreen}
       width={640}
       height={480}
+      gridSize={10}
+      // nogrid
     />
   )
 }

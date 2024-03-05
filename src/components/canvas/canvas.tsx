@@ -1,33 +1,6 @@
 import React, { useRef, useCallback, useEffect } from 'react'
 
-export type CanvasContext =
-  | CanvasRenderingContext2D
-  | WebGLRenderingContext
-  | WebGL2RenderingContext
-  | ImageBitmapRenderingContext
-
-interface EventCallback {
-  handleEvent: (event: Event) => void
-  eventTypes: string[]
-}
-
-interface CanvasDimensions {
-  width: number
-  height: number
-  position: string
-  top: string
-  left: string
-}
-
-interface CanvasProps<T extends CanvasContext = CanvasRenderingContext2D>
-  extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
-  init?: (canvas: HTMLCanvasElement) => T
-  render?: (context: T, deltaTime: number) => void
-  update?: (context: T, deltaTime: number) => void
-  events?: EventCallback
-  fullscreen?: boolean
-  frameRate?: number
-}
+import { CanvasContext, CanvasProps, CanvasState } from './canvas.d'
 
 const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   init,
@@ -36,6 +9,8 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   events,
   fullscreen,
   frameRate,
+  gridSize,
+  nogrid,
   children,
   ...rest
 }: CanvasProps<T>) => {
@@ -43,7 +18,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   const contextRef = useRef<T>()
   const renderTimeRef = useRef<number>(performance.now())
   const updateTimeRef = useRef<number>(performance.now())
-  const dimensionsRef = useRef<CanvasDimensions | null>(null)
+  const stateRef = useRef<CanvasState | null>(null)
 
   // Callbacks
   // --------------
@@ -102,8 +77,8 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     if (!canvas) return
 
     if (fullscreen) {
-      if (!dimensionsRef.current) {
-        dimensionsRef.current = {
+      if (!stateRef.current) {
+        stateRef.current = {
           width: canvas.width,
           height: canvas.height,
           position: canvas.style.position,
@@ -118,15 +93,15 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
       canvas.style.top = '0'
       canvas.style.left = '0'
     } else {
-      if (dimensionsRef.current) {
-        const { width, height, position, top, left } = dimensionsRef.current
+      if (stateRef.current) {
+        const { width, height, position, top, left } = stateRef.current
         canvas.width = width
         canvas.height = height
         canvas.style.position = position
         canvas.style.top = top
         canvas.style.left = left
 
-        dimensionsRef.current = null
+        stateRef.current = null
       }
     }
   }, [fullscreen])
@@ -190,17 +165,25 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     return () => removeEventListeners()
   }, [events, eventHandler])
 
+  gridSize = gridSize ? gridSize : 20
+  const gridHalf = gridSize / 2
+
   const canvasStyle = {
     outline: 'none', // Hide tab-index border
     backgroundColor: 'magenta', // Fallback color
     background:
       'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
-    backgroundSize: '20px 20px',
-    backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+    backgroundSize: `${gridSize}px ${gridSize}px`,
+    backgroundPosition: `0 0, 0 ${gridHalf}px, ${gridHalf}px ${-gridHalf}px, ${-gridHalf}px 0px`,
   }
 
   return (
-    <canvas ref={canvasRef} tabIndex={0} style={canvasStyle} {...rest}>
+    <canvas
+      ref={canvasRef}
+      tabIndex={0}
+      style={nogrid ? { outline: 'none' } : canvasStyle}
+      {...rest}
+    >
       {children}
     </canvas>
   )

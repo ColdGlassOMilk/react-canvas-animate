@@ -1,1 +1,6 @@
-export { Canvas, type CanvasContext } from './components/canvas'
+export {
+  Canvas as default,
+  CanvasContext,
+  CanvasEventCallback,
+  CanvasProps,
+} from './components/canvas'

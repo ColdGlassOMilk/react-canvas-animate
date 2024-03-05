@@ -7,7 +7,7 @@ react-canvas-animate is a minimal HTML Canvas element wrapped in a React compone
 The most basic component to start with. By default the canvas will init with a `CanvasRenderingContext2D`
 
 ```typescript
-import { Canvas } from 'react-canvas-animate'
+import Canvas from 'react-canvas-animate'
 
 export default function App() {
   const render = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
@@ -27,7 +27,7 @@ export default function App() {
 By default, a `CanvasRenderingContext2D` is created, but you can override this with the `init` callback. To replicate the default behavior:
 
 ```tsx
-import { Canvas } from 'react-canvas-animate'
+import Canvas from 'react-canvas-animate'
 
 type Context2D = CanvasRenderingContext2D
 
@@ -62,7 +62,7 @@ export default function App() {
 
   Update is called by default at 60 times per second, update loop is de-coupled from rendering. Adjust using the `frameRate` prop
 
-- `events` { handleEvent: Event, eventTypes: string[] }
+- `events` { handleEvent: (event: Event) => void, eventTypes: string[] }
 
   Event listener callback (see "Handle Events" section below)
 
@@ -74,7 +74,15 @@ Additional props are defined as:
 
 - `fullscreen` boolean
 
-  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed. Override with `style={{ position: 'absolute' }}`
+  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed. Override with `style={{ position: 'absolute' }}` or `position: undefined`
+
+- `nogrid` boolean
+
+  Setting to true will disable the tiled grid background. _Note: The grid is generated interally through styles, and will not in any way affect image rendering_
+
+- `gridSize` number
+
+  Default is 20. Size in pixels for the tiled grid background.
 
 - `frameRate` number
 
@@ -85,7 +93,7 @@ Additional props are defined as:
 A more comprehensive example initializing an OpenGL context
 
 ```typescript
-import { Canvas } from 'react-canvas-animate'
+import Canvas from 'react-canvas-animate'
 
 type WebGL = WebGLRenderingContext
 
@@ -139,7 +147,7 @@ The `events` prop accepts an object structured as
 
 ```ts
 import { useState, useRef } from 'react'
-import { Canvas } from 'react-canvas-animate'
+import Canvas from 'react-canvas-animate'
 
 type Context2D = CanvasRenderingContext2D
 
@@ -152,11 +160,10 @@ export default function App() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
     // Draw a square at the cursor position
-    const clientRect = ctx.canvas.getBoundingClientRect()
     ctx.fillStyle = 'red'
     ctx.fillRect(
-      cursorRef.current.x - 10 - clientRect.left,
-      cursorRef.current.y - 10 - clientRect.top,
+      cursorRef.current.x - 10,
+      cursorRef.current.y - 10,
       20,
       20,
     )
@@ -164,8 +171,8 @@ export default function App() {
 
   const handleMouseMove = (event: MouseEvent) => {
     cursorRef.current = {
-      x: event.clientX,
-      y: event.clientY
+      x: event.offsetX,
+      y: event.offsetY
     }
   }
 
@@ -200,3 +207,23 @@ export default function App() {
   )
 }
 ```
+
+## Loading Images
+
+Quick reference for loading images programmatically
+
+```ts
+import logo from './logo.svg' // Load the create-react-app logo
+
+// useRef to store image data inside our component
+const logoRef = useRef<HTMLImageElement>(new Image())
+
+// set data inside the init callback
+logoRef.current.src = logo
+
+// render the image
+const img = logoRef.current
+context.drawImage(img, 0, 0, img.width, img.height)
+```
+
+You can also place an optional `logoRef.current.onload = () => {}` callback before the src assignment to be triggered when the image loading is complete.
