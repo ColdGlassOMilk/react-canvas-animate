@@ -9,8 +9,7 @@ export class NyanCat extends CanvasObject<Context2D> {
 
   constructor(context: Context2D) {
     super(context)
-    this.images = new ImageLoader()
-    this.images.loadImages([NyanImage])
+    this.images = new ImageLoader([NyanImage])
   }
 
   render(deltaTime: number): void {
@@ -18,5 +17,5 @@ export class NyanCat extends CanvasObject<Context2D> {
     this.context.drawImage(img, 0, 0)
   }
 
-  update(deltaTime: number): void {}
+  // update(deltaTime: number): void {}
 }

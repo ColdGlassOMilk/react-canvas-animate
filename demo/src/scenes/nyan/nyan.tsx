@@ -1,18 +1,15 @@
 import { useRef } from 'react'
-import Canvas from 'react-canvas-animate'
+import Canvas, { CanvasObject } from 'react-canvas-animate'
 
 import { NyanCat } from '../../objects/NyanCat'
 
 type Context2D = CanvasRenderingContext2D
 
 function Nyan() {
-  const catRef = useRef<NyanCat>()
+  const catRef = useRef<CanvasObject>()
 
   const init = (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext('2d', {
-      alpha: true,
-      desyncronized: true,
-    }) as Context2D
+    const ctx = canvas.getContext('2d', { alpha: true }) as Context2D
 
     catRef.current = new NyanCat(ctx)
 

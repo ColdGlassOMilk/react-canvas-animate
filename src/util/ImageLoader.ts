@@ -1,24 +1,35 @@
 class ImageLoader {
   private images: Record<string, HTMLImageElement> = {}
 
-  loadImages(srcList: string[]): Promise<void[]> {
-    const pendingImages: Promise<void>[] = []
-    srcList.forEach((src) => {
-      pendingImages.push(
-        new Promise<void>((resolve, reject) => {
-          const img = new Image()
-          img.onload = () => {
-            this.images[src] = img
-            resolve()
-          }
-          img.onerror = (error) => {
-            reject(error)
-          }
-          img.src = src
-        }),
-      )
+  constructor(srcList?: string[]) {
+    this.loadImages(srcList || [])
+  }
+
+  loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => {
+        this.images[src] = img
+        resolve(img)
+      }
+      img.onerror = (error) => {
+        reject(error)
+      }
+      img.src = src
     })
+  }
+
+  loadImages(srcList: string[]): Promise<HTMLImageElement[]> {
+    const pendingImages: Promise<HTMLImageElement>[] = srcList.map((src) => this.loadImage(src))
     return Promise.all(pendingImages)
+  }
+
+  getImageList(): string[] {
+    return Object.keys(this.images)
+  }
+
+  getImages(): HTMLImageElement[] {
+    return Object.values(this.images)
   }
 
   getImage(src: string): HTMLImageElement {

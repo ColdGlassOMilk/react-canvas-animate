@@ -1,8 +1,8 @@
 import { CanvasContext } from '../components/Canvas'
 
 interface CanvasObjectInterface {
-  render(deltaTime: number): void
-  update(deltaTime: number): void
+  render?(deltaTime: number): void
+  update?(deltaTime: number): void
 }
 
 abstract class CanvasObject<T extends CanvasContext = CanvasRenderingContext2D>
@@ -14,8 +14,8 @@ abstract class CanvasObject<T extends CanvasContext = CanvasRenderingContext2D>
     this.context = context
   }
 
-  abstract render(deltaTime: number): void
-  abstract update(deltaTime: number): void
+  render(deltaTime: number): void {}
+  update(deltaTime: number): void {}
 }
 
 export default CanvasObject

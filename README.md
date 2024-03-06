@@ -209,65 +209,27 @@ export default function App() {
 
 ## Loading Images
 
-A helper class is included to ease in loading image data programmatically.
+A helper class is included to ease in loading image data programmatically. See example usage below.
 
-`ImageLoader` has two methods:
+`ImageLoader` class
 
-- `loadImages` (string[]) => Promise\<void\>
+- `constructor` (string[] | null) => Promise\<HTMLImageElement[]\>
 
-  Accepts an array of images to load. Resolves promise when images are all loaded. Rejects promise if any fail.
+- `loadImages` (string[]) => Promise\<HTMLImageElement[]\>
+
+- `loadImage` (string) => Promise\<HTMLImageElement\>
+
+- `getImageList` () => string[]
+
+- `getImages` () => HTMLImageElement[]
 
 - `getImage` (string) => HTMLImageElement
 
   Return the specified image. If image is not loaded, returns an empty Image() instance.
 
-#### Example
-
-```ts
-import { useRef } from 'react'
-import Canvas, { ImageLoader } from 'react-canvas-animate'
-import logo from './logo.svg' // Load the create-react-app logo
-
-export default function App() {
-  const imageRef = useRef<ImageLoader>(new ImageLoader())
-
-  const init = (canvas: HTMLCanvasElement) => {
-    const context = canvas.getContext('2d')
-
-    // Method 1
-    imageRef.current.loadImages([logo])
-
-    // Method 2
-    imageRef.current.loadImages([logo]).then(() => {
-      // do something when all images are loaded, if needed
-    }).catch((error) => {
-      console.error('Error loading images:', error);
-    });
-
-    return context
-  }
-
-  const render = (context: CanvasRenderingContext2D, deltaTime: number) => {
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-
-    // Render the image
-    const img = imageRef.current.getImage(logo)
-    context.drawImage(img, 0, 0, img.width, img.height)
-  }
-
-  return (
-    <Canvas
-      init={init}
-      render={render}
-      fullscreen
-    />
-  )
-}
-```
-
 ## CanvasObject
 
-A rudimentary abstract class is provided to better encapsulate renderable elements, like the Canvas component, it takes a generic `CanvasContext` type (default is `CanvasRenderingContext2D`)
+A rudimentary abstract class is provided to better encapsulate objects, like the Canvas component, it takes a generic `CanvasContext` type (default is `CanvasRenderingContext2D`)
 
 #### Example
 
@@ -285,16 +247,13 @@ export class NyanCat extends CanvasObject<Context2D> {
 
   constructor(context: Context2D) {
     super(context)
-    this.images = new ImageLoader()
-    this.images.loadImages([NyanImage])
+    this.images = new ImageLoader([NyanImage])
   }
 
   render(deltaTime: number): void {
     const img = this.images.getImage(NyanImage)
     this.context.drawImage(img, 0, 0)
   }
-
-  update(deltaTime: number): void {}
 }
 ```
 
