@@ -210,20 +210,58 @@ export default function App() {
 
 ## Loading Images
 
-Quick reference for loading images programmatically
+A helper class is included to ease in loading image data programmatically.
+
+`ImageLoader` has two methods:
+
+- `loadImages` (string[]) => Promise\<void\>
+
+  Accepts an array of images to load. Resolves promise when images are all loaded. Rejects promise if any fail.
+
+- `getImage` (string) => HTMLImageElement
+
+  Return the specified image. If image is not loaded, returns an empty Image() instance.
+
+#### Example
 
 ```ts
+import { useRef } from 'react'
+import Canvas, { ImageLoader } from 'react-canvas-animate'
 import logo from './logo.svg' // Load the create-react-app logo
 
-// useRef to store image data inside our component
-const logoRef = useRef<HTMLImageElement>(new Image())
+export default function App() {
+  const imageRef = useRef<ImageLoader>(new ImageLoader())
 
-// set data inside the init callback
-logoRef.current.src = logo
+  const init = (canvas: HTMLCanvasElement) => {
+    const context = canvas.getContext('2d')
 
-// render the image
-const img = logoRef.current
-context.drawImage(img, 0, 0, img.width, img.height)
+    // Method 1
+    imageRef.current.loadImages([logo])
+
+    // Method 2
+    imageRef.current.loadImages([logo]).then(() => {
+      // do something when all images are loaded, if needed
+    }).catch((error) => {
+      console.error('Error loading images:', error);
+    });
+
+    return context
+  }
+
+  const render = (context: CanvasRenderingContext2D, deltaTime: number) => {
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+
+    // Render the image
+    const img = imageRef.current.getImage(logo)
+    context.drawImage(img, 0, 0, img.width, img.height)
+  }
+
+  return (
+    <Canvas
+      init={init}
+      render={render}
+      fullscreen
+    />
+  )
+}
 ```
-
-You can also place an optional `logoRef.current.onload = () => {}` callback before the src assignment to be triggered when the image loading is complete.

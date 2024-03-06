@@ -79,7 +79,8 @@ export default function DemoScene() {
       width={1024}
       height={768}
       gridSize={zoom}
-      nogrid={hideGrid}
+      // nogrid={hideGrid}
+      nogrid
     />
   )
 }

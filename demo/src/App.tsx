@@ -1,7 +1,13 @@
 import { DemoScene } from './scenes/demo'
+import Nyan from './scenes/nyan/nyan'
 
 function App() {
-  return <DemoScene />
+  return (
+    <>
+      <Nyan />
+      <DemoScene />
+    </>
+  )
 }
 
 export default App

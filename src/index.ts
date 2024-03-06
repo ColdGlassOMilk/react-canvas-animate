@@ -1,5 +1,8 @@
 import Canvas from './components/canvas/canvas'
 
+import ImageLoader from './lib/image-loader'
+export { ImageLoader }
+
 export {
   CanvasContext,
   CanvasEventCallback,
