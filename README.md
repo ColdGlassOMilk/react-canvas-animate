@@ -33,8 +33,7 @@ type Context2D = CanvasRenderingContext2D
 
 export default function App() {
   // Return the context as the expected type
-  const init = (canvas: HTMLCanvasElement) =>
-    canvas.getContext('2d') as Context2D
+  const init = (canvas: HTMLCanvasElement) => canvas.getContext('2d') as Context2D
 
   // Callbacks will receive the specified context type
   const render = (context: Context2D, deltaTime: number) => {}
@@ -264,4 +263,71 @@ export default function App() {
     />
   )
 }
+```
+
+## CanvasObject
+
+A rudimentary abstract class is provided to better encapsulate renderable elements, like the Canvas component, it takes a generic `CanvasContext` type (default is `CanvasRenderingContext2D`)
+
+#### Example
+
+Let's create an object to represent Nyan cat using a `CanvasObject`
+
+```ts
+import { CanvasObject, ImageLoader } from 'react-canvas-animate'
+
+import NyanImage from './nyan.png'
+
+type Context2D = CanvasRenderingContext2D
+
+export class NyanCat extends CanvasObject<Context2D> {
+  private images: ImageLoader
+
+  constructor(context: Context2D) {
+    super(context)
+    this.images = new ImageLoader()
+    this.images.loadImages([NyanImage])
+  }
+
+  render(deltaTime: number): void {
+    const img = this.images.getImage(NyanImage)
+    this.context.drawImage(img, 0, 0)
+  }
+
+  update(deltaTime: number): void {}
+}
+```
+
+And then render it in our main component:
+
+```ts
+import { useRef } from 'react'
+import Canvas from 'react-canvas-animate'
+
+import { NyanCat } from '@/objects/NyanCat'
+
+type Context2D = CanvasRenderingContext2D
+
+function Nyan() {
+  const nyanRef = useRef<NyanCat>()
+
+  const init = (canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext('2d', { alpha: true }) as Context2D
+
+    nyanRef.current = new NyanCat(ctx)
+
+    return ctx
+  }
+
+  const render = (ctx: Context2D, deltaTime: number) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+    nyanRef.current?.render(deltaTime)
+  }
+
+  return <Canvas init={init} render={render} width={1024} height={768} />
+}
+
+export default Nyan
+
 ```

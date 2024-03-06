@@ -7,7 +7,7 @@ export type CanvasContext =
   | ImageBitmapRenderingContext
 
 export interface CanvasEventCallback {
-  handleEvent: (event: Event) => void
+  handleEvent(event: Event): void
   eventTypes: string[]
 }
 

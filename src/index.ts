@@ -1,13 +1,12 @@
-import ImageLoader from './lib/image-loader'
+// Utils
+import ImageLoader from './util/ImageLoader'
 export { ImageLoader }
 
-import Canvas from './components/canvas'
+// Lib
+import CanvasObject from './lib/CanvasObject'
+export { CanvasObject }
 
-export {
-  CanvasContext,
-  CanvasEventCallback,
-  CanvasProps,
-  CanvasState,
-} from './components/canvas'
-
+// Components
+import Canvas from './components/Canvas'
+export { CanvasContext, CanvasEventCallback, CanvasProps, CanvasState } from './components/Canvas'
 export default Canvas
