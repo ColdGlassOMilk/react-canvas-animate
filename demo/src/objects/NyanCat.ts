@@ -12,7 +12,7 @@ export class NyanCat extends CanvasObject<Context2D> {
     this.images = new ImageLoader([NyanImage])
   }
 
-  render(deltaTime: number): void {
+  render(): void {
     const img = this.images.getImage(NyanImage)
     this.context.drawImage(img, 0, 0)
   }

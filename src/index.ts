@@ -3,6 +3,8 @@ import ImageLoader from './util/ImageLoader'
 export { ImageLoader }
 
 // Lib
+import CanvasObjectManager from './lib/CanvasObjectManager'
+export { CanvasObjectManager }
 import CanvasObject from './lib/CanvasObject'
 export { CanvasObject }
 

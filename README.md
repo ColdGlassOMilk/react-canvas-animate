@@ -227,9 +227,9 @@ A helper class is included to ease in loading image data programmatically. See e
 
   Return the specified image. If image is not loaded, returns an empty Image() instance.
 
-## CanvasObject
+## CanvasObject & CanvasObjectManager
 
-A rudimentary abstract class is provided to better encapsulate objects, like the Canvas component, it takes a generic `CanvasContext` type (default is `CanvasRenderingContext2D`)
+A rudimentary abstract class is provided to better encapsulate objects, along with a Manager/Factory class. Like the Canvas component, they take a generic `CanvasContext` type (default is `CanvasRenderingContext2D`)
 
 #### Example
 
@@ -257,36 +257,40 @@ export class NyanCat extends CanvasObject<Context2D> {
 }
 ```
 
-And then render it in our main component:
+And then render it in our main component using the `CanvasObjectManager`:
 
 ```ts
 import { useRef } from 'react'
-import Canvas from 'react-canvas-animate'
+import Canvas, { CanvasObjectManager } from 'react-canvas-animate'
 
 import { NyanCat } from '@/objects/NyanCat'
 
 type Context2D = CanvasRenderingContext2D
 
 function Nyan() {
-  const nyanRef = useRef<NyanCat>()
+  const objectRef = useRef<CanvasObjectManager<Context2D>>()
 
   const init = (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext('2d', { alpha: true }) as Context2D
+    const context = canvas.getContext('2d', { alpha: true }) as Context2D
 
-    nyanRef.current = new NyanCat(ctx)
+    objectRef.current = new CanvasObjectManager(context)
 
-    return ctx
+    // Use factory method to instantiate our NyanCat object
+    objectRef.current.create(NyanCat)
+
+    return context
   }
 
-  const render = (ctx: Context2D, deltaTime: number) => {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  const render = (context: Context2D, deltaTime: number) => {
+    context.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    nyanRef.current?.render(deltaTime)
+    objectRef.current?.render(deltaTime)
   }
 
-  return <Canvas init={init} render={render} width={1024} height={768} />
+  return <Canvas init={init} render={render} width={1024} height={768} fullscreen />
 }
 
 export default Nyan
+
 
 ```

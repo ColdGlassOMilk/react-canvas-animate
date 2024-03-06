@@ -1,17 +1,18 @@
 import { useRef } from 'react'
-import Canvas, { CanvasObject } from 'react-canvas-animate'
+import Canvas, { CanvasObjectManager } from 'react-canvas-animate'
 
 import { NyanCat } from '../../objects/NyanCat'
 
 type Context2D = CanvasRenderingContext2D
 
 function Nyan() {
-  const catRef = useRef<CanvasObject>()
+  const objectRef = useRef<CanvasObjectManager<Context2D>>()
 
   const init = (canvas: HTMLCanvasElement) => {
     const ctx = canvas.getContext('2d', { alpha: true }) as Context2D
 
-    catRef.current = new NyanCat(ctx)
+    objectRef.current = new CanvasObjectManager(ctx)
+    objectRef.current.create(NyanCat)
 
     return ctx
   }
@@ -21,7 +22,7 @@ function Nyan() {
 
     ctx.save()
 
-    catRef.current?.render(time)
+    objectRef.current?.render(time)
 
     ctx.restore()
   }
