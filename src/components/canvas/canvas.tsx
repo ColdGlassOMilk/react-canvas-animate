@@ -1,6 +1,11 @@
 import React, { useRef, useCallback, useEffect } from 'react'
 
-import { CanvasContext, CanvasProps, CanvasState } from './canvas.d'
+import {
+  CanvasContext,
+  CanvasEventCallback,
+  CanvasProps,
+  CanvasState,
+} from './canvas.d'
 
 const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   init,
@@ -189,4 +194,10 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
   )
 }
 
-export default Canvas
+export {
+  Canvas as default,
+  CanvasContext,
+  CanvasEventCallback,
+  CanvasProps,
+  CanvasState,
+}

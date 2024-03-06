@@ -1,6 +1,10 @@
+import Canvas from './components/canvas/canvas'
+
 export {
-  Canvas as default,
   CanvasContext,
   CanvasEventCallback,
   CanvasProps,
-} from './components/canvas'
+  CanvasState,
+} from './components/canvas/canvas'
+
+export default Canvas
