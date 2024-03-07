@@ -15,5 +15,7 @@ export class NyanCat extends CanvasObject<Context2D> {
     this.context.drawImage(img, 0, 0)
   }
 
-  // update(deltaTime: number): void {}
+  update(deltaTime: number): void {
+    console.log('deltaTime', deltaTime)
+  }
 }

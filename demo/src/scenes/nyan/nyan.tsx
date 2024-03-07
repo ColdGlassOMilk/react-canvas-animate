@@ -22,7 +22,11 @@ function Nyan() {
     objectRef.current?.render(time)
   }
 
-  return <Canvas init={init} render={render} fullscreen />
+  const update = (ctx: Context2D, time: number) => {
+    objectRef.current?.update(time)
+  }
+
+  return <Canvas init={init} render={render} update={update} frameRate={1} fullscreen />
 }
 
 export default Nyan
