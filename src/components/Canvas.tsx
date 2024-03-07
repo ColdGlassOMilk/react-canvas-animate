@@ -14,8 +14,8 @@ export interface CanvasEventCallback {
 export interface CanvasProps<T extends CanvasContext = Context2D>
   extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   init?: (canvas: HTMLCanvasElement) => T
-  render?: (context: T, deltaTime: number) => void
-  update?: (context: T, deltaTime: number) => void
+  render?: (_context: T, _deltaTime: number) => void
+  update?: (_context: T, _deltaTime: number) => void
   events?: CanvasEventCallback
   fullscreen?: boolean
   frameRate?: number

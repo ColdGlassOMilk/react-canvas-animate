@@ -48,19 +48,15 @@ class CanvasObjectManager<
 
   // Callbacks
 
-  update(deltaTime: number): void {
+  update(..._args: any[]): void {
     for (const object of this.objects) {
-      if (object.update) {
-        object.update(deltaTime)
-      }
+      object.callUpdate(_args)
     }
   }
 
-  render(deltaTime: number): void {
+  render(..._args: any[]): void {
     for (const object of this.objects) {
-      if (object.render) {
-        object.render(deltaTime)
-      }
+      object.callRender(_args)
     }
   }
 }

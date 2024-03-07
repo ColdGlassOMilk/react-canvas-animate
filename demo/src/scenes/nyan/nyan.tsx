@@ -16,14 +16,14 @@ function Nyan() {
     return ctx
   }
 
-  const render = (ctx: Context2D, time: number) => {
+  const render = (ctx: Context2D) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render(time)
+    objectRef.current?.render()
   }
 
   const update = (ctx: Context2D, time: number) => {
-    objectRef.current?.update(time)
+    objectRef.current?.update({ deltaTime: time, isFabulous: true })
   }
 
   return <Canvas init={init} render={render} update={update} frameRate={1} fullscreen />

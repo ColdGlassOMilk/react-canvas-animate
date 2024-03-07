@@ -38,7 +38,7 @@ The most basic component to start with. By default the canvas will init with a `
 import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
-  const render = (ctx: Context2D, deltaTime: number) => {
+  const render = (ctx: Context2D) => {
     const { width, height } = ctx.canvas
     ctx.fillStyle = '#111'
     ctx.fillRect(0, 0, width, height)
@@ -146,7 +146,7 @@ export default function App() {
     return gl
   }
 
-  const render = (gl: WebGL, deltaTime: number) => {
+  const render = (gl: WebGL) => {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   }
 
@@ -188,7 +188,7 @@ export default function App() {
   const [fullscreen, setFullscreen] = useState(true)
   const cursorRef = useRef({ x: 0, y: 0 })
 
-  const render = (ctx: Context2D, time: number) => {
+  const render = (ctx: Context2D) => {
     // Clear the screen
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
@@ -276,7 +276,7 @@ import { Context2D, CanvasObject, ImageLoader } from 'react-canvas-animate'
 
 import NyanImage from './nyan.png'
 
-export class NyanCat extends CanvasObject<Context2D> {
+export class NyanCat extends CanvasObject {
   private images: ImageLoader
 
   constructor(context: Context2D) {
@@ -284,9 +284,13 @@ export class NyanCat extends CanvasObject<Context2D> {
     this.images = new ImageLoader([NyanImage])
   }
 
-  render(deltaTime: number): void {
+  render(): void {
     const img = this.images.getImage(NyanImage)
     this.context.drawImage(img, 0, 0)
+  }
+
+  update(): void {
+    console.log('args', this.args)
   }
 }
 ```
@@ -313,14 +317,18 @@ export default function Nyan() {
     return context
   }
 
-  const render = (ctx: Context2D, deltaTime: number) => {
+  const render = (ctx: Context2D) => {
     context.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
     objectRef.current?.render()
   }
 
+  const update = (ctx: Context2D, time: number) => {
+    objectRef.current?.update({ deltaTime: time, isAwesome: true })
+  }
+
   return (
-    <Canvas init={init} render={render} fullscreen />
+    <Canvas init={init} render={render} frameRate={1} fullscreen />
   )
 }
 ```
