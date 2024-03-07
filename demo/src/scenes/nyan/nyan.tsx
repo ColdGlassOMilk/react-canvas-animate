@@ -1,9 +1,7 @@
 import { useRef } from 'react'
-import Canvas, { CanvasObjectManager } from 'react-canvas-animate'
+import Canvas, { Context2D, CanvasObjectManager } from 'react-canvas-animate'
 
 import { NyanCat } from '../../objects/NyanCat'
-
-type Context2D = CanvasRenderingContext2D
 
 function Nyan() {
   const objectRef = useRef<CanvasObjectManager<Context2D>>()

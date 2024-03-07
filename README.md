@@ -4,13 +4,13 @@ react-canvas-animate is a minimal HTML Canvas element wrapped in a React compone
 
 ## Getting Started
 
-The most basic component to start with. By default the canvas will init with a `CanvasRenderingContext2D`
+The most basic component to start with. By default the canvas will init with a `Context2D`
 
 ```typescript
-import Canvas from 'react-canvas-animate'
+import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
-  const render = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
+  const render = (ctx: Context2D, deltaTime: number) => {
     // Clear the background
     ctx.fillStyle = '#111'
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -24,16 +24,34 @@ export default function App() {
 
 `CanvasContext` - Specify any of the available HTMLCanvasElement contextTypes - [HTMLCanvasElement Docs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext)
 
-By default, a `CanvasRenderingContext2D` is created, but you can override this with the `init` callback. To replicate the default behavior:
+Type aliases are available for each of the available context types:
+
+```ts
+type Context2D = CanvasRenderingContext2D
+type WebGL = WebGLRenderingContext
+type WebGL2 = WebGL2RenderingContext
+type Bitmap = ImageBitmapRenderingContext
+
+type CanvasContext = Context2D | WebGL | WebGL2 | Bitmap
+```
+
+By default, a `Context2D` is created, but you can override this with the `init` callback. For example, to replicate the default behavior:
 
 ```tsx
-import Canvas from 'react-canvas-animate'
-
-type Context2D = CanvasRenderingContext2D
+import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
   // Return the context as the expected type
-  const init = (canvas: HTMLCanvasElement) => canvas.getContext('2d') as Context2D
+  const init = (canvas: HTMLCanvasElement) => {
+    const context = canvas.getContext('2d', {
+      alpha: true,
+      desyncronized: true,
+    }) as Context2D
+
+    // Perform other init functions here
+
+    return context
+  }
 
   // Callbacks will receive the specified context type
   const render = (context: Context2D, deltaTime: number) => {}
@@ -92,9 +110,7 @@ Additional props are defined as:
 A more comprehensive example initializing an OpenGL context
 
 ```typescript
-import Canvas from 'react-canvas-animate'
-
-type WebGL = WebGLRenderingContext
+import Canvas, { WebGL } from 'react-canvas-animate'
 
 export default function App() {
   const init = (canvas: HTMLCanvasElement) => {
@@ -146,9 +162,7 @@ The `events` prop accepts an object structured as
 
 ```ts
 import { useState, useRef } from 'react'
-import Canvas from 'react-canvas-animate'
-
-type Context2D = CanvasRenderingContext2D
+import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
   const [fullscreen, setFullscreen] = useState(false)
@@ -213,7 +227,7 @@ A helper class is included to ease in loading image data programmatically. See e
 
 `ImageLoader` class
 
-- `constructor` (string[] | null) => Promise\<HTMLImageElement[]\>
+- `constructor` (string[] | null)
 
 - `loadImages` (string[]) => Promise\<HTMLImageElement[]\>
 
@@ -225,22 +239,22 @@ A helper class is included to ease in loading image data programmatically. See e
 
 - `getImage` (string) => HTMLImageElement
 
-  Return the specified image. If image is not loaded, returns an empty Image() instance.
+  Returns the specified image. If image is not loaded, returns an empty Image() instance.
 
 ## CanvasObject & CanvasObjectManager
 
-A rudimentary abstract class is provided to better encapsulate objects, along with a Manager/Factory class. Like the Canvas component, they take a generic `CanvasContext` type (default is `CanvasRenderingContext2D`)
+A rudimentary abstract class is provided to better encapsulate objects, along with a Manager/Factory class. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
+
+You can extend these classes to suit your needs (e.g. Scenes, Layers, Components, etc.) or instantiate them directly.
 
 #### Example
 
 Let's create an object to represent Nyan cat using a `CanvasObject`
 
 ```ts
-import { CanvasObject, ImageLoader } from 'react-canvas-animate'
+import { Context2D, CanvasObject, ImageLoader } from 'react-canvas-animate'
 
 import NyanImage from './nyan.png'
-
-type Context2D = CanvasRenderingContext2D
 
 export class NyanCat extends CanvasObject<Context2D> {
   private images: ImageLoader
@@ -257,17 +271,15 @@ export class NyanCat extends CanvasObject<Context2D> {
 }
 ```
 
-And then render it in our main component using the `CanvasObjectManager`:
+And then render it in our component using the `CanvasObjectManager`:
 
 ```ts
 import { useRef } from 'react'
-import Canvas, { CanvasObjectManager } from 'react-canvas-animate'
+import Canvas, { Context2D, CanvasObjectManager } from 'react-canvas-animate'
 
 import { NyanCat } from '@/objects/NyanCat'
 
-type Context2D = CanvasRenderingContext2D
-
-function Nyan() {
+export default function Nyan() {
   const objectRef = useRef<CanvasObjectManager<Context2D>>()
 
   const init = (canvas: HTMLCanvasElement) => {
@@ -289,8 +301,4 @@ function Nyan() {
 
   return <Canvas init={init} render={render} width={1024} height={768} fullscreen />
 }
-
-export default Nyan
-
-
 ```

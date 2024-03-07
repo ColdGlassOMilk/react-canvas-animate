@@ -1,17 +1,17 @@
 import React, { useRef, useCallback, useEffect } from 'react'
 
-export type CanvasContext =
-  | CanvasRenderingContext2D
-  | WebGLRenderingContext
-  | WebGL2RenderingContext
-  | ImageBitmapRenderingContext
+export type Context2D = CanvasRenderingContext2D
+export type WebGL = WebGLRenderingContext
+export type WebGL2 = WebGL2RenderingContext
+export type Bitmap = ImageBitmapRenderingContext
+export type CanvasContext = Context2D | WebGL | WebGL2 | Bitmap
 
 export interface CanvasEventCallback {
   handleEvent(event: Event): void
   eventTypes: string[]
 }
 
-export interface CanvasProps<T extends CanvasContext = CanvasRenderingContext2D>
+export interface CanvasProps<T extends CanvasContext = Context2D>
   extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   init?: (canvas: HTMLCanvasElement) => T
   render?: (context: T, deltaTime: number) => void
@@ -31,7 +31,7 @@ export interface CanvasState {
   left: string
 }
 
-const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
+const Canvas = <T extends CanvasContext = Context2D>({
   init,
   render,
   update,
@@ -154,7 +154,7 @@ const Canvas = <T extends CanvasContext = CanvasRenderingContext2D>({
     if (init) {
       contextRef.current = init(canvas)
     } else {
-      contextRef.current = canvas.getContext('2d', { desyncronized: true }) as T
+      contextRef.current = canvas.getContext('2d', { alpha: true, desyncronized: true }) as T
     }
   }, [init])
 

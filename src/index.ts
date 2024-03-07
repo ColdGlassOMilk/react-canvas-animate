@@ -10,5 +10,14 @@ export { CanvasObject }
 
 // Components
 import Canvas from './components/Canvas'
-export { CanvasContext, CanvasEventCallback, CanvasProps, CanvasState } from './components/Canvas'
+export {
+  CanvasContext,
+  CanvasEventCallback,
+  CanvasProps,
+  CanvasState,
+  Context2D,
+  WebGL,
+  WebGL2,
+  Bitmap,
+} from './components/Canvas'
 export default Canvas

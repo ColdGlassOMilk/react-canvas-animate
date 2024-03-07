@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import Canvas from 'react-canvas-animate'
+import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function DemoScene() {
   const [fullscreen, setFullscreen] = useState(true)
@@ -10,7 +10,7 @@ export default function DemoScene() {
   const clickRef = useRef(false)
   return (
     <Canvas
-      render={(ctx: CanvasRenderingContext2D, time: number) => {
+      render={(ctx: Context2D, time: number) => {
         ctx.globalAlpha = 0.2
         ctx.shadowBlur = zoom / 2
         ctx.shadowColor = 'aqua'
@@ -60,20 +60,12 @@ export default function DemoScene() {
               }
               break
             case 'wheel':
-              const newZoom =
-                zoom - ((event as WheelEvent).deltaY / 1000) * zoom
+              const newZoom = zoom - ((event as WheelEvent).deltaY / 1000) * zoom
               setZoom(Math.min(1000, Math.max(4, newZoom)))
               break
           }
         },
-        eventTypes: [
-          'mousemove',
-          'mousedown',
-          'mouseup',
-          'dblclick',
-          'keydown',
-          'wheel',
-        ],
+        eventTypes: ['mousemove', 'mousedown', 'mouseup', 'dblclick', 'keydown', 'wheel'],
       }}
       fullscreen={fullscreen}
       width={1024}
