@@ -39,9 +39,9 @@ import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
   const render = (ctx: Context2D, deltaTime: number) => {
-    // Clear the background
+    const { width, height } = ctx.canvas
     ctx.fillStyle = '#111'
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.fillRect(0, 0, width, height)
   }
 
   return <Canvas render={render} />
@@ -198,7 +198,7 @@ export default function App() {
       cursorRef.current.x - 10,
       cursorRef.current.y - 10,
       20,
-      20,
+      20
     )
   }
 
@@ -323,6 +323,43 @@ export default function Nyan() {
     <Canvas init={init} render={render} fullscreen />
   )
 }
+```
+
+#### Extending Functionality
+
+The `CanvasObject` class is declared as
+
+```ts
+class CanvasObject<T extends CanvasContext = Context2D>
+```
+
+The `CanvasObjectManager` class is declared as
+
+```ts
+class CanvasObjectManager<
+  T extends CanvasObject = CanvasObject,
+  C extends CanvasContext = Context2D
+>
+```
+
+Get Creative! This lends itself to being quite flexible in that you could define something like for example:
+
+```ts
+class Layer extends CanvasObject {
+  constructor(context: Context2D) {
+    super(context)
+    this.objects = CanvasObjectsManager(context)
+  }
+}
+class LayerManager extends CanvasObjectManager<Layer> {}
+
+class Scene extends CanvasObject {
+  constructor(context: Context2D) {
+    super(context)
+    this.layers = new LayerManager(context)
+  }
+}
+class SceneManager extends CanvasObjectManager<Scene> {}
 ```
 
 ## Contributing
