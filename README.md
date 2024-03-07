@@ -1,6 +1,34 @@
-# react-canvas-animate
+<h1 align="center">🎞️ Welcome to react-canvas-animate 👋</h1>
+<p>
+  <a href="https://www.npmjs.com/package/react-canvas-animate" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/react-canvas-animate.svg">
+  </a>
+  <a href="https://github.com/ColdGlassOMilk/react-canvas-animate/graphs/commit-activity" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  </a>
+  <a href="https://github.com/ColdGlassOMilk/react-canvas-animate/blob/master/LICENSE" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/ColdGlassOMilk/react-canvas-animate" />
+  </a>
+</p>
 
-react-canvas-animate is a minimal HTML Canvas element wrapped in a React component with some additional helpers specifically for animation. Includes support for both Typescript and CommonJS.
+> React canvas wrapper with functionality for animation and event handling.
+
+## Requirements
+
+- `react >= 16`
+- `react-dom >= 16`
+
+## Install
+
+Add to an existing react project.
+
+```sh
+bun add react-canvas-animate
+
+npm add react-canvas-animate
+
+yarn add react-canvas-animate
+```
 
 ## Getting Started
 
@@ -20,18 +48,13 @@ export default function App() {
 }
 ```
 
-## Available Props
+## Props
 
 `CanvasContext` - Specify any of the available HTMLCanvasElement contextTypes - [HTMLCanvasElement Docs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext)
 
 Type aliases are available for each of the available context types:
 
 ```ts
-type Context2D = CanvasRenderingContext2D
-type WebGL = WebGLRenderingContext
-type WebGL2 = WebGL2RenderingContext
-type Bitmap = ImageBitmapRenderingContext
-
 type CanvasContext = Context2D | WebGL | WebGL2 | Bitmap
 ```
 
@@ -43,10 +66,7 @@ import Canvas, { Context2D } from 'react-canvas-animate'
 export default function App() {
   // Return the context as the expected type
   const init = (canvas: HTMLCanvasElement) => {
-    const context = canvas.getContext('2d', {
-      alpha: true,
-      desyncronized: true,
-    }) as Context2D
+    const context = canvas.getContext('2d', { alpha: true }) as Context2D
 
     // Perform other init functions here
 
@@ -119,7 +139,7 @@ export default function App() {
       desyncronized: true
     }) as WebGL
 
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+    gl.viewport(0, 0, canvas.width, canvas.height)
     gl.clearColor(0.1, 0.1, 0.1, 1.0)
     gl.enable(gl.DEPTH_TEST)
 
@@ -299,13 +319,15 @@ export default function Nyan() {
     objectRef.current?.render(deltaTime)
   }
 
-  return <Canvas init={init} render={render} width={1024} height={768} fullscreen />
+  return (
+    <Canvas init={init} render={render} fullscreen />
+  )
 }
 ```
 
-## Development
+## Contributing
 
-Contributions are welcomed and encouraged. Please submit a pull request or open an issue if you encounter issues or have feature requests.
+Contributions are welcomed and encouraged.
 
 To get started, install react and react-dom globally, then link them to the package
 
@@ -330,3 +352,20 @@ At this point, Typescript should watch for code changes, and launch the demo cre
 ```bash
 npm start
 ```
+
+## Author
+
+👤 **Nicholaus Brabant**
+
+- Github: [@ColdGlassOMilk](https://github.com/ColdGlassOMilk)
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+Copyright © 2024 [Nicholaus Brabant](https://github.com/ColdGlassOMilk).<br />
+This project is [MIT](https://github.com/ColdGlassOMilk/react-canvas-animate/blob/master/LICENSE) licensed.
+
+---
