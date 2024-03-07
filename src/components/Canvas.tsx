@@ -150,7 +150,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
   // Initialize canvas context
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || contextRef.current) return
 
     if (init) {
       contextRef.current = init(canvas)

@@ -8,6 +8,7 @@ export class NyanCat extends CanvasObject<Context2D> {
   constructor(context: Context2D) {
     super(context)
     this.images = new ImageLoader([NyanImage])
+    // console.log('NyanCat initialized')
   }
 
   render(): void {
@@ -16,6 +17,6 @@ export class NyanCat extends CanvasObject<Context2D> {
   }
 
   update(deltaTime: number): void {
-    console.log('deltaTime', deltaTime)
+    // console.log('deltaTime', deltaTime)
   }
 }
