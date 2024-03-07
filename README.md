@@ -185,7 +185,7 @@ import { useState, useRef } from 'react'
 import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
-  const [fullscreen, setFullscreen] = useState(false)
+  const [fullscreen, setFullscreen] = useState(true)
   const cursorRef = useRef({ x: 0, y: 0 })
 
   const render = (ctx: Context2D, time: number) => {
@@ -300,7 +300,7 @@ import Canvas, { Context2D, CanvasObjectManager } from 'react-canvas-animate'
 import { NyanCat } from '@/objects/NyanCat'
 
 export default function Nyan() {
-  const objectRef = useRef<CanvasObjectManager<Context2D>>()
+  const objectRef = useRef<CanvasObjectManager>()
 
   const init = (canvas: HTMLCanvasElement) => {
     const context = canvas.getContext('2d', { alpha: true }) as Context2D
@@ -313,10 +313,10 @@ export default function Nyan() {
     return context
   }
 
-  const render = (context: Context2D, deltaTime: number) => {
+  const render = (ctx: Context2D, deltaTime: number) => {
     context.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render(deltaTime)
+    objectRef.current?.render()
   }
 
   return (
@@ -327,22 +327,7 @@ export default function Nyan() {
 
 #### Extending Functionality
 
-The `CanvasObject` class is declared as
-
-```ts
-class CanvasObject<T extends CanvasContext = Context2D>
-```
-
-The `CanvasObjectManager` class is declared as
-
-```ts
-class CanvasObjectManager<
-  T extends CanvasObject = CanvasObject,
-  C extends CanvasContext = Context2D
->
-```
-
-Get Creative! This lends itself to being quite flexible in that you could define something like for example:
+Get Creative! These classes lend themselves to being quite flexible in that you could define something for example:
 
 ```ts
 class Layer extends CanvasObject {

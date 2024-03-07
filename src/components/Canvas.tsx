@@ -82,7 +82,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
   const updateLoop = useCallback(() => {
     if (!update) return
 
-    let timeoutID: number
+    let intervalID: number
 
     const loop = () => {
       const context = contextRef.current
@@ -93,13 +93,12 @@ const Canvas = <T extends CanvasContext = Context2D>({
       updateTimeRef.current = currentTime
 
       update(context, deltaTime)
-
-      timeoutID = setTimeout(loop, 1000 / (frameRate || 60))
     }
 
     loop()
+    intervalID = setInterval(loop, 1000 / (frameRate || 60))
 
-    return () => clearTimeout(timeoutID)
+    return () => clearInterval(intervalID)
   }, [update, frameRate])
 
   // Callback for handling canvas resize

@@ -1,13 +1,11 @@
-import { CanvasContext } from '../components/Canvas'
+import { CanvasContext, Context2D } from '../components/Canvas'
 
 interface CanvasObjectInterface {
   render?(deltaTime?: number): void
   update?(deltaTime?: number): void
 }
 
-abstract class CanvasObject<T extends CanvasContext = CanvasRenderingContext2D>
-  implements CanvasObjectInterface
-{
+abstract class CanvasObject<T extends CanvasContext = Context2D> implements CanvasObjectInterface {
   protected context: T
 
   constructor(context: T) {

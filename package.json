@@ -1,6 +1,6 @@
 {
   "name": "react-canvas-animate",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "React canvas wrapper with functionality for animation and event handling. Includes Typescript and commonJS support.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
