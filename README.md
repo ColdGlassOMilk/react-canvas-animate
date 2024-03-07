@@ -66,7 +66,7 @@ import Canvas, { Context2D } from 'react-canvas-animate'
 export default function App() {
   // Return the context as the expected type
   const init = (canvas: HTMLCanvasElement) => {
-    const context = canvas.getContext('2d', { alpha: true }) as Context2D
+    const context = canvas.getContext('2d') as Context2D
 
     // Perform other init functions here
 
@@ -303,7 +303,7 @@ export default function Nyan() {
   const objectRef = useRef<CanvasObjectManager>()
 
   const init = (canvas: HTMLCanvasElement) => {
-    const context = canvas.getContext('2d', { alpha: true }) as Context2D
+    const context = canvas.getContext('2d') as Context2D
 
     objectRef.current = new CanvasObjectManager(context)
 
@@ -333,7 +333,7 @@ Get Creative! These classes lend themselves to being quite flexible in that you 
 class Layer extends CanvasObject {
   constructor(context: Context2D) {
     super(context)
-    this.objects = CanvasObjectsManager(context)
+    this.objects = CanvasObjectManager(context)
   }
 }
 class LayerManager extends CanvasObjectManager<Layer> {}
