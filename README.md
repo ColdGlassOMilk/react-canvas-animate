@@ -243,7 +243,7 @@ A helper class is included to ease in loading image data programmatically. See e
 
 ## CanvasObject & CanvasObjectManager
 
-A rudimentary abstract class is provided to better encapsulate objects, along with a Manager/Factory class. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
+Some rudimentary classes are provided to better encapsulate objects. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
 
 You can extend these classes to suit your needs (e.g. Scenes, Layers, Components, etc.) or instantiate them directly.
 
@@ -301,4 +301,32 @@ export default function Nyan() {
 
   return <Canvas init={init} render={render} width={1024} height={768} fullscreen />
 }
+```
+
+## Development
+
+Contributions are welcomed and encouraged. Please submit a pull request or open an issue if you encounter issues or have feature requests.
+
+To get started, install react and react-dom globally, then link them to the package
+
+```bash
+npm install -g react react-dom
+npm link react
+npm link react-dom
+```
+
+Next, link our local package, then link it inside the demo app
+
+```bash
+npm install
+npm link
+cd demo
+npm link react-canvas-animate
+cd ..
+```
+
+At this point, Typescript should watch for code changes, and launch the demo create-react-app
+
+```bash
+npm start
 ```
