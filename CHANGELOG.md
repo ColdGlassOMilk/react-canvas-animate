@@ -30,15 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-## [Unreleased]
+## [Version 1.2.3] - 2024-03-08
 
 ### Added
 
-- `hideCursor` boolean prop
+- `hideCursor` boolean prop added to Canvas
 
 ### Changed
 
-- `CanvasObject` and `CanvasObjectManager` now have more generic types added along with state management
+- `CanvasObject` and `CanvasObjectManager` now have more generic types added along with state and arg management
 
 ## [Version 1.2.2] - 2024-03-07
 

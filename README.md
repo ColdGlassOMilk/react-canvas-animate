@@ -249,6 +249,8 @@ A helper class is included to ease in loading image data programmatically. See e
 
 ## CanvasObject & CanvasObjectManager
 
+> These classes are a work in progress, please use them at your own risk.
+
 Some rudimentary classes are provided to better encapsulate objects. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
 
 You can extend these classes to suit your needs (e.g. Scenes, Layers, Components, etc.) or instantiate them directly.
@@ -276,8 +278,8 @@ export class NyanCat extends CanvasObject {
   }
 
   update(): void {
-    // Should output { deltaTime: number, isAwesome: true }
-    console.log('args', this.args)
+    console.log('Nyan State', this.state) // { isAwesome: true }
+    console.log('Nyan Props', this.args) // { deltaTime: 1000 }
   }
 }
 ```
@@ -297,17 +299,17 @@ export default function Nyan() {
     const objects = (objectRef.current = new CanvasObjectManager(ctx))
 
     // Use factory method to instantiate our NyanCat object
-    objects.create(NyanCat)
+    objects.create(NyanCat, { isAwesome: true })
   }
 
   const render = (ctx: Context2D) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render()
+    objectRef.current?.render({})
   }
 
   const update = (ctx: Context2D, time: number) => {
-    objectRef.current?.update({ deltaTime: time, isAwesome: true })
+    objectRef.current?.update({ deltaTime: time })
   }
 
   return (
@@ -321,21 +323,49 @@ export default function Nyan() {
 Get Creative! These classes lend themselves to being quite flexible in that you could define something for example:
 
 ```ts
-class Layer extends CanvasObject {
-  constructor(context: Context2D) {
-    super(context)
-    this.objects = CanvasObjectManager(context)
-  }
-}
-class LayerManager extends CanvasObjectManager<Layer> {}
+import {
+  CanvasObjectManager
+  CanvasObjectState
+  CanvasObjectProps
+  CanvasObject
+} from 'react-canvas-animate'
 
-class Scene extends CanvasObject {
-  constructor(context: Context2D) {
-    super(context)
-    this.layers = new LayerManager(context)
+interface LayerState extends CanvasObjectState {
+  id: number
+}
+
+interface LayerProps extends CanvasObjectProps {
+  cursor: {
+    x: number
+    y: number
   }
 }
-class SceneManager extends CanvasObjectManager<Scene> {}
+
+class Layer extends CanvasObject<LayerState, LayerProps> {}
+
+class LayerManager extends CanvasObjectManager<Layer, LayerState, LayerProps> {}
+
+class MyCustomLayer extends Layer {
+  update() {
+    console.log('Layer ID', this.state.id)
+    console.log('Cursor', this.args.cursor)
+  }
+}
+
+// ...
+
+// In your Canvas component...
+const layerRef = useRef<LayerManager>()
+
+// Init
+layerRef.current = new LayerManager(context, [
+  [MyCustomLayer, { id: 1 }],
+  [MyCustomLayer, { id: 2 }],
+])
+layerRef.current.create(MyCustomLayer, { id: 3 })
+
+// Update
+layerRef.current?.update({ cursor: { x: 0, y: 0 } })
 ```
 
 ## Contributing

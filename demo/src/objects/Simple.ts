@@ -1,7 +1,6 @@
 import {
   CanvasObject,
   CanvasObjectState,
-  Context2D,
   ImageLoader,
 } from 'react-canvas-animate'
 
