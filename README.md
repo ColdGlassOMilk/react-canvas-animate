@@ -133,6 +133,8 @@ Additional props are defined as:
 
 - `attributes` Object - Collection of any permitted context attributes to be passed on init
 
+- `hideCursor` boolean
+
 - `fullscreen` boolean
 
   Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed. Override with `style={{ position: 'absolute' }}` or `position: undefined`
