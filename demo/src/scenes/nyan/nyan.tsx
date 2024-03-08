@@ -13,14 +13,14 @@ function Nyan() {
     objects.create(NyanCat)
   }
 
-  const render = (ctx: Context2D) => {
+  const render = (ctx: Context2D, time: number) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render()
+    objectRef.current?.render({ deltaTime: time })
   }
 
   const update = (ctx: Context2D, time: number) => {
-    objectRef.current?.update({ deltaTime: time, isFabulous: true })
+    objectRef.current?.update({ deltaTime: time })
   }
 
   const handleKeyDown = (event: KeyboardEvent) => {
