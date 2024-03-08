@@ -127,6 +127,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
       canvas.style.position = 'fixed'
       canvas.style.top = '0'
       canvas.style.left = '0'
+      canvas.focus()
     } else {
       if (stateRef.current) {
         const { width, height, position, top, left } = stateRef.current

@@ -23,11 +23,7 @@
 Add to an existing react project.
 
 ```sh
-bun add react-canvas-animate
-
 npm add react-canvas-animate
-
-yarn add react-canvas-animate
 ```
 
 ## Getting Started
@@ -75,7 +71,7 @@ export default function App() {
 
 A more comprehensive example initializing an OpenGL context
 
-```typescript
+```ts
 import Canvas, { WebGL } from 'react-canvas-animate'
 
 export default function App() {
