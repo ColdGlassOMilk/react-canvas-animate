@@ -296,16 +296,14 @@ export default function Nyan() {
   const objectRef = useRef<CanvasObjectManager>()
 
   const init = (ctx: Context2D) => {
-    objectRef.current = new CanvasObjectManager(ctx)
+    const objects = (objectRef.current = new CanvasObjectManager(ctx))
 
     // Use factory method to instantiate our NyanCat object
-    objectRef.current.create(NyanCat)
-
-    return context
+    objects.create(NyanCat)
   }
 
   const render = (ctx: Context2D) => {
-    context.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
     objectRef.current?.render()
   }
