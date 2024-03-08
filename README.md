@@ -65,9 +65,9 @@ import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
   return (
-    <Canvas<Context2D> // Define the context type that will be used
-      type='2d'
-      attributes={{ alpha: true }}
+    <Canvas<Context2D> // Define the CanvasContext that will be used
+      type='2d' // '2d' | 'webgl' | 'webgl2' | 'bitmaprenderer'
+      attributes={{ alpha: true, desyncronized: true }}
     />
   )
 }
@@ -80,7 +80,8 @@ import Canvas, { WebGL } from 'react-canvas-animate'
 
 export default function App() {
   const init = (gl: WebGL) => {
-    gl.viewport(0, 0, canvas.width, canvas.height)
+    const { width, height } = gl.canvas
+    gl.viewport(0, 0, width, height)
     gl.clearColor(0.1, 0.1, 0.1, 1.0)
     gl.enable(gl.DEPTH_TEST)
   }
@@ -96,7 +97,7 @@ export default function App() {
   return (
     <Canvas<WebGL>
       type='webgl'
-      attributes={{ antialias: true, desyncronized: true }}
+      attributes={{ antialias: true }}
       init={init}
       render={render}
       update={update}
