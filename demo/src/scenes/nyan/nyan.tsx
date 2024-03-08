@@ -6,14 +6,10 @@ import { NyanCat } from '../../objects/NyanCat'
 function Nyan() {
   const objectRef = useRef<CanvasObjectManager>()
 
-  const init = (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext('2d', { alpha: true }) as Context2D
-
+  const init = (ctx: Context2D) => {
     const objects = (objectRef.current = new CanvasObjectManager(ctx))
 
     objects.create(NyanCat)
-
-    return ctx
   }
 
   const render = (ctx: Context2D) => {
@@ -26,7 +22,15 @@ function Nyan() {
     objectRef.current?.update({ deltaTime: time, isFabulous: true })
   }
 
-  return <Canvas init={init} render={render} update={update} frameRate={1} fullscreen />
+  return (
+    <Canvas
+      init={init}
+      render={render}
+      update={update}
+      frameRate={1}
+      fullscreen
+    />
+  )
 }
 
 export default Nyan

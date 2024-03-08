@@ -5,6 +5,7 @@ export type WebGL = WebGLRenderingContext
 export type WebGL2 = WebGL2RenderingContext
 export type Bitmap = ImageBitmapRenderingContext
 export type CanvasContext = Context2D | WebGL | WebGL2 | Bitmap
+export type ContextTypes = '2d' | 'webgl' | 'webgl2' | 'bitmaprenderer'
 
 export interface CanvasEventCallback {
   handleEvent(event: Event): void
@@ -13,9 +14,11 @@ export interface CanvasEventCallback {
 
 export interface CanvasProps<T extends CanvasContext = Context2D>
   extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
-  init?: (canvas: HTMLCanvasElement) => T
-  render?: (_context: T, _deltaTime: number) => void
-  update?: (_context: T, _deltaTime: number) => void
+  init?: (context: T) => void
+  render?: (context: T, deltaTime: number) => void
+  update?: (context: T, deltaTime: number) => void
+  type?: ContextTypes
+  attributes?: Record<string, unknown>
   events?: CanvasEventCallback
   fullscreen?: boolean
   frameRate?: number
@@ -35,6 +38,8 @@ const Canvas = <T extends CanvasContext = Context2D>({
   init,
   render,
   update,
+  type,
+  attributes,
   events,
   fullscreen,
   frameRate,
@@ -152,18 +157,16 @@ const Canvas = <T extends CanvasContext = Context2D>({
     const canvas = canvasRef.current
     if (!canvas || contextRef.current) return
 
-    if (init) {
-      contextRef.current = init(canvas)
-    } else {
-      contextRef.current = canvas.getContext('2d', { alpha: true, desyncronized: true }) as T
-    }
+    contextRef.current = canvas.getContext(type || '2d', attributes) as T
+
+    if (init) init(contextRef.current)
   }, [init])
 
   // Start rendering loop
-  useEffect(renderLoop, [renderLoop])
+  useEffect(renderLoop, [])
 
   // Start update loop
-  useEffect(updateLoop, [updateLoop])
+  useEffect(updateLoop, [])
 
   // Handle fullscreen mode & resize events
   useEffect(() => {
