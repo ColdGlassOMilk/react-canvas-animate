@@ -5,8 +5,11 @@ export { ImageLoader }
 // Lib
 import CanvasObjectManager from './lib/CanvasObjectManager'
 export { CanvasObjectManager }
-import CanvasObject from './lib/CanvasObject'
-export { CanvasObject }
+import CanvasObject, {
+  CanvasObjectProps,
+  CanvasObjectState,
+} from './lib/CanvasObject'
+export { CanvasObject, CanvasObjectProps, CanvasObjectState }
 
 // Components
 import Canvas from './components/Canvas'
@@ -14,7 +17,6 @@ export {
   CanvasContext,
   CanvasEventCallback,
   CanvasProps,
-  CanvasState,
   Context2D,
   WebGL,
   WebGL2,

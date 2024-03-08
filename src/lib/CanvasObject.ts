@@ -1,25 +1,35 @@
 import { CanvasContext, Context2D } from '../components/Canvas'
 
+export type CanvasObjectState = Record<string, unknown>
+export type CanvasObjectProps = Record<string, unknown>
+
 interface CanvasObjectInterface {
   render?(): void
   update?(): void
 }
 
-abstract class CanvasObject<T extends CanvasContext = Context2D> implements CanvasObjectInterface {
+abstract class CanvasObject<
+  S extends CanvasObjectState = CanvasObjectState,
+  P extends CanvasObjectProps = CanvasObjectProps,
+  T extends CanvasContext = Context2D,
+> implements CanvasObjectInterface
+{
   protected context: T
-  protected args: any = {}
+  protected state: S = {} as S
+  protected args: P = {} as P
 
-  constructor(context: T) {
+  constructor(context: T, state: S) {
     this.context = context
+    this.state = state as S
   }
 
-  callRender(..._args: any[]): void {
-    ;[this.args] = _args[0]
+  callRender(_args: P): void {
+    this.args = _args as P
     this.render()
   }
 
-  callUpdate(..._args: any[]): void {
-    ;[this.args] = _args[0]
+  callUpdate(_args: P): void {
+    this.args = _args as P
     this.update()
   }
 

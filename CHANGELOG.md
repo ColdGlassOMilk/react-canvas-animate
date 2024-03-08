@@ -36,6 +36,10 @@ All notable changes to this project will be documented in this file.
 
 - `hideCursor` boolean prop
 
+### Changed
+
+- `CanvasObject` and `CanvasObjectManager` now have more generic types added along with state management
+
 ## [Version 1.2.2] - 2024-03-07
 
 ### Fixed

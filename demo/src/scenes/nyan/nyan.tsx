@@ -1,26 +1,41 @@
 import { useRef, useState } from 'react'
 import Canvas, { Context2D, CanvasObjectManager } from 'react-canvas-animate'
 
-import { NyanCat } from '../../objects/NyanCat'
+import { NyanCat, CatManager } from '../../objects/NyanCat'
+import { Simple } from '../../objects/Simple'
 
 function Nyan() {
   const [fullscreen, setFullscreen] = useState(true)
+  const catRef = useRef<CatManager>()
   const objectRef = useRef<CanvasObjectManager>()
 
   const init = (ctx: Context2D) => {
-    const objects = (objectRef.current = new CanvasObjectManager(ctx))
+    // Method 1
+    const catMan = (catRef.current = new CatManager(ctx))
+    objectRef.current = new CanvasObjectManager(ctx, [
+      [Simple, {}],
+      [Simple, {}],
+    ])
 
-    objects.create(NyanCat)
+    objectRef.current.createList([
+      [Simple, {}],
+      [Simple, {}],
+    ])
+
+    catMan.create(NyanCat, { isAwesome: true, x: 50, y: 50 })
+
+    // Method 2
+    // objectRef.current = new CatManager(ctx, [[NyanCat, { x: 50, y: 50 }]])
   }
 
   const render = (ctx: Context2D, time: number) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render({ deltaTime: time })
+    catRef.current?.render({ deltaTime: time })
   }
 
   const update = (ctx: Context2D, time: number) => {
-    objectRef.current?.update({ deltaTime: time })
+    catRef.current?.update({ deltaTime: time })
   }
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -47,7 +62,7 @@ function Nyan() {
       update={update}
       frameRate={1}
       fullscreen={fullscreen}
-      hideCursor={fullscreen}
+      // hideCursor={fullscreen}
     />
   )
 }

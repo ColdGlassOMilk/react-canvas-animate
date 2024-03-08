@@ -1,26 +1,52 @@
-import { Context2D, CanvasObject, ImageLoader } from 'react-canvas-animate'
+import {
+  Context2D,
+  ImageLoader,
+  CanvasObject,
+  CanvasObjectState,
+  CanvasObjectProps,
+  CanvasObjectManager,
+} from 'react-canvas-animate'
 
 import NyanImage from './images/nyan.png'
 
-export class NyanCat extends CanvasObject<Context2D> {
-  private images: ImageLoader
-  private frameCount = 0
+interface NyanState extends CanvasObjectState {
+  frameCount?: number
+  isAwesome?: boolean
+  x: number
+  y: number
+}
 
-  constructor(context: Context2D) {
-    super(context)
+interface NyanProps extends CanvasObjectProps {
+  deltaTime: number
+}
+
+export class NyanCat extends CanvasObject<NyanState, NyanProps> {
+  private images: ImageLoader
+
+  constructor(context: Context2D, state: NyanState) {
+    super(context, state)
     this.images = new ImageLoader([NyanImage])
   }
 
   render(): void {
     const img = this.images.getImage(NyanImage)
-    this.context.drawImage(img, 0, 0)
+    this.context.drawImage(img, this.state.x, this.state.y)
 
-    if (this.frameCount++ % 60 === 0) {
-      console.log('Render Args', this.args)
-    }
+    // if (this.state.frameCount % 60 === 0) {
+    //   console.log('Render Args', this.args)
+    // }
   }
 
   update(): void {
     console.log('Update Args', this.args)
+    console.log('Nyan State', this.state)
+
+    this.state.frameCount = (this.state.frameCount || 0) + 1
   }
 }
+
+export class CatManager extends CanvasObjectManager<
+  NyanCat,
+  NyanState,
+  NyanProps
+> {}
