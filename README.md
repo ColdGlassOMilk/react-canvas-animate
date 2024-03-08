@@ -58,28 +58,49 @@ Type aliases are available for each of the available context types:
 type CanvasContext = Context2D | WebGL | WebGL2 | Bitmap
 ```
 
-By default, a `Context2D` is created, but you can override this with the `init` callback. For example, to replicate the default behavior:
+By default, a `Context2D` is created, but you can specify any type along with it's respective attributes using the `type` and `attributes` props, here is an example:
 
 ```tsx
 import Canvas, { Context2D } from 'react-canvas-animate'
 
 export default function App() {
-  // Return the context as the expected type
-  const init = (canvas: HTMLCanvasElement) => {
-    const context = canvas.getContext('2d') as Context2D
-
-    // Perform other init functions here
-
-    return context
-  }
-
-  // Callbacks will receive the specified context type
-  const render = (context: Context2D, deltaTime: number) => {}
-
   return (
     <Canvas<Context2D> // Define the context type that will be used
+      type='2d'
+      attributes={{ alpha: true }}
+    />
+  )
+}
+```
+
+A more comprehensive example initializing an OpenGL context
+
+```typescript
+import Canvas, { WebGL } from 'react-canvas-animate'
+
+export default function App() {
+  const init = (gl: WebGL) => {
+    gl.viewport(0, 0, canvas.width, canvas.height)
+    gl.clearColor(0.1, 0.1, 0.1, 1.0)
+    gl.enable(gl.DEPTH_TEST)
+  }
+
+  const render = (gl: WebGL) => {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+  }
+
+  const update = (gl: WebGL, deltaTime: number) => {
+    // Perform calculations
+  }
+
+  return (
+    <Canvas<WebGL>
+      type='webgl'
+      attributes={{ antialias: true, desyncronized: true }}
       init={init}
       render={render}
+      update={update}
+      fullscreen
     />
   )
 }
@@ -87,9 +108,9 @@ export default function App() {
 
 #### Callbacks
 
-- `init` (canvas: HTMLCanvasElement) => CanvasContext
+- `init` (context: CanvasContext) => void
 
-  Init is used to setup a custom rendering context, return the context to be used for rendering
+  Init is called once after the component has mounted and context has been initialized
 
 - `render` (context: CanvasContext, deltaTime: number) => void
 
@@ -109,6 +130,12 @@ All available `HTMLCanvasElement` props are passed to the underlying canvas elem
 
 Additional props are defined as:
 
+- `type` ContextType: `'2d' | 'webgl' | 'webgl2' | 'bitmaprenderer'`
+
+  Specifies what type of context should be created.
+
+- `attributes` Object - Collection of any permitted context attributes to be passed on init
+
 - `fullscreen` boolean
 
   Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed. Override with `style={{ position: 'absolute' }}` or `position: undefined`
@@ -124,46 +151,6 @@ Additional props are defined as:
 - `frameRate` number
 
   Default is 60. Does not affect actual render framerate as that is locked to screen refresh rate. Only affects timeout of update callback.
-
-## Example
-
-A more comprehensive example initializing an OpenGL context
-
-```typescript
-import Canvas, { WebGL } from 'react-canvas-animate'
-
-export default function App() {
-  const init = (canvas: HTMLCanvasElement) => {
-    const gl = canvas.getContext('webgl', {
-      antialias: true,
-      desyncronized: true
-    }) as WebGL
-
-    gl.viewport(0, 0, canvas.width, canvas.height)
-    gl.clearColor(0.1, 0.1, 0.1, 1.0)
-    gl.enable(gl.DEPTH_TEST)
-
-    return gl
-  }
-
-  const render = (gl: WebGL) => {
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-  }
-
-  const update = (gl: WebGL, deltaTime: number) => {
-    // Perform calculations
-  }
-
-  return (
-    <Canvas<WebGL>
-      init={init}
-      render={render}
-      update={update}
-      fullscreen
-    />
-  )
-}
-```
 
 ## Handle Events
 
@@ -290,6 +277,7 @@ export class NyanCat extends CanvasObject {
   }
 
   update(): void {
+    // Should output { deltaTime: number, isAwesome: true }
     console.log('args', this.args)
   }
 }
@@ -306,10 +294,8 @@ import { NyanCat } from '@/objects/NyanCat'
 export default function Nyan() {
   const objectRef = useRef<CanvasObjectManager>()
 
-  const init = (canvas: HTMLCanvasElement) => {
-    const context = canvas.getContext('2d') as Context2D
-
-    objectRef.current = new CanvasObjectManager(context)
+  const init = (ctx: Context2D) => {
+    objectRef.current = new CanvasObjectManager(ctx)
 
     // Use factory method to instantiate our NyanCat object
     objectRef.current.create(NyanCat)

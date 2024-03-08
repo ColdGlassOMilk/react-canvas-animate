@@ -5,7 +5,7 @@ export type WebGL = WebGLRenderingContext
 export type WebGL2 = WebGL2RenderingContext
 export type Bitmap = ImageBitmapRenderingContext
 export type CanvasContext = Context2D | WebGL | WebGL2 | Bitmap
-export type ContextTypes = '2d' | 'webgl' | 'webgl2' | 'bitmaprenderer'
+export type ContextType = '2d' | 'webgl' | 'webgl2' | 'bitmaprenderer'
 
 export interface CanvasEventCallback {
   handleEvent(event: Event): void
@@ -17,7 +17,7 @@ export interface CanvasProps<T extends CanvasContext = Context2D>
   init?: (context: T) => void
   render?: (context: T, deltaTime: number) => void
   update?: (context: T, deltaTime: number) => void
-  type?: ContextTypes
+  type?: ContextType
   attributes?: Record<string, unknown>
   events?: CanvasEventCallback
   fullscreen?: boolean
