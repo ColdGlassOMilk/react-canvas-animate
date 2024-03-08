@@ -18,7 +18,7 @@ abstract class CanvasObject<
   protected state: S = {} as S
   protected args: P = {} as P
 
-  constructor(context: T, state: S) {
+  constructor(context: T, state?: S) {
     this.context = context
     this.state = state as S
   }
