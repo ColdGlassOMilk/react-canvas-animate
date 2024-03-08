@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unrelease]
+
+### Added
+
+- `hideCursor` boolean prop
+
 ## [Version 1.2.2] - 2024-03-07
 
 ### Fixed

@@ -21,6 +21,7 @@ export interface CanvasProps<T extends CanvasContext = Context2D>
   attributes?: Record<string, unknown>
   events?: CanvasEventCallback
   fullscreen?: boolean
+  hideCursor?: boolean
   frameRate?: number
   gridSize?: number
   nogrid?: boolean
@@ -42,6 +43,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
   attributes,
   events,
   fullscreen,
+  hideCursor,
   frameRate,
   gridSize,
   nogrid,
@@ -199,12 +201,14 @@ const Canvas = <T extends CanvasContext = Context2D>({
     return () => removeEventListeners()
   }, [events, eventHandler])
 
+  const canvasStyle: React.CSSProperties = {
+    cursor: hideCursor ? 'none' : 'auto',
+    outline: 'none', // Hide tab-index border
+  }
+
   gridSize = gridSize ? gridSize : 20
   const gridHalf = gridSize / 2
-
-  const canvasStyle = {
-    outline: 'none', // Hide tab-index border
-    backgroundColor: 'magenta', // Fallback color
+  const gridStyle: React.CSSProperties = {
     background:
       'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
     backgroundSize: `${gridSize}px ${gridSize}px`,
@@ -215,7 +219,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
     <canvas
       ref={canvasRef}
       tabIndex={0}
-      style={nogrid ? { outline: 'none' } : canvasStyle}
+      style={nogrid ? canvasStyle : { ...canvasStyle, ...gridStyle }}
       {...rest}
     >
       {children}

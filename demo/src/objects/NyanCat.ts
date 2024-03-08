@@ -1,6 +1,6 @@
 import { Context2D, CanvasObject, ImageLoader } from 'react-canvas-animate'
 
-import NyanImage from './nyan.png'
+import NyanImage from './images/nyan.png'
 
 export class NyanCat extends CanvasObject<Context2D> {
   private images: ImageLoader
