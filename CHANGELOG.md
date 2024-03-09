@@ -30,11 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-## [Unreleased]
+## [Version 1.2.4] 2024-03-08
+
+### Added
+
+- `esbuild` configuration to bundle/minify build
 
 ### Changed
 
-- Refactors type declarations
+- Refactored type declarations
 
 ### Fixed
 
