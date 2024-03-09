@@ -30,9 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+### Fixed
+
+- canvas styles are now merged with those supplied to `Canvas` props - This fixes an issue where base styles were completely overriden.
+
 ## [Version 1.2.7] 2024-03-09
 
-## Changed
+### Changed
 
 - Updated `CanvasObject` and `CanvasObjectManager` (renamed to `ObjectManager`)
 
