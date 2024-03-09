@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Version 1.2.5] 2024-03-08
+
+### Removed
+
+- `tslib` dependency
+
 ## [Version 1.2.4] 2024-03-08
 
 ### Added

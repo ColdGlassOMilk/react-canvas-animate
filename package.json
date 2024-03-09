@@ -1,6 +1,6 @@
 {
   "name": "react-canvas-animate",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "React canvas wrapper with functionality for animation and event handling. Includes Typescript and commonJS support.",
   "main": "./dist/bundle.cjs.js",
   "module": "./dist/bundle.esm.js",
@@ -32,12 +32,10 @@
   ],
   "author": "Nicholaus Brabant",
   "license": "MIT",
-  "dependencies": {
-    "tslib": "^2.6.2"
-  },
   "devDependencies": {
     "@types/react": "^18.2.61",
     "esbuild": "^0.20.1",
+    "tslib": "^2.6.2",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
