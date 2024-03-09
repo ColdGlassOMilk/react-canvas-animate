@@ -1,4 +1,4 @@
-import type { CanvasContext, Context2D } from '../components/Canvas.d'
+import type { CanvasContext, Context2D } from '../components/Canvas'
 
 export type CanvasObjectState = Record<string, unknown>
 export type CanvasObjectProps = Record<string, unknown>

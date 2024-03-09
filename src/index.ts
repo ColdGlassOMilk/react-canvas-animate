@@ -21,5 +21,5 @@ export type {
   WebGL,
   WebGL2,
   Bitmap,
-} from './components/Canvas.d'
+} from './components/Canvas'
 export default Canvas

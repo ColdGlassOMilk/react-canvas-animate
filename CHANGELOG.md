@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Version 1.2.6] 2024-03-09
+
+### Fixed
+
+- Fixed an issue with type declarations being exported incorrectly by Typescript transpiler (Bug?)
+
 ## [Version 1.2.5] 2024-03-08
 
 ### Removed
