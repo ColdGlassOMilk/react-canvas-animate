@@ -61,7 +61,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
   const updateLoop = useCallback(() => {
     if (!update) return
 
-    let intervalID: NodeJS.Timeout
+    let intervalID: number
 
     const loop = () => {
       const context = contextRef.current

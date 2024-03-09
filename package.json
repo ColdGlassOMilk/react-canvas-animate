@@ -6,10 +6,11 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "scripts": {
-    "prepare": "npm run build",
-    "build": "npm run build:esm && npm run build:cjs",
+    "prepare": "npm run build && node prepare.js",
+    "build": "npm run build:esm && npm run build:cjs && npm run bundle",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "bundle": "esbuild dist/esm/index.js --bundle --minify --platform=node --target=es6 --external:react --external:react-dom --outfile=dist/bundle.esm.js && esbuild dist/cjs/index.js --bundle --minify --platform=node --target=es6 --external:react --external:react-dom --outfile=dist/bundle.cjs.js",
     "start": "npm run dev & npm run --prefix ./demo start",
     "dev": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.61",
+    "esbuild": "^0.20.1",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {

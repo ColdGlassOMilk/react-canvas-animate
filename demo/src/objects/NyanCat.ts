@@ -38,8 +38,8 @@ export class NyanCat extends CanvasObject<NyanState, NyanProps> {
   }
 
   update(): void {
-    console.log('Update Args', this.args)
-    console.log('Nyan State', this.state)
+    // console.log('Update Args', this.args)
+    // console.log('Nyan State', this.state)
 
     this.state.frameCount = (this.state.frameCount || 0) + 1
   }

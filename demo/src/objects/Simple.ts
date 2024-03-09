@@ -10,6 +10,6 @@ export interface SimpleState extends CanvasObjectState {
 
 export class Simple extends CanvasObject<SimpleState> {
   update() {
-    console.log('Simple update', this.state)
+    // console.log('Simple update', this.state)
   }
 }
