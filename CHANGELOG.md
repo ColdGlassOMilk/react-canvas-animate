@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+### Fixed
+
+- Moved `tslib` from devDependencies into dependencies
+
 ## [Version 1.2.3] - 2024-03-08
 
 ### Added
