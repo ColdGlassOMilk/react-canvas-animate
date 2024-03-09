@@ -32,6 +32,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Refactors type declarations
+
 ### Fixed
 
 - Moved `tslib` from devDependencies into dependencies

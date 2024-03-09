@@ -13,7 +13,7 @@ export { CanvasObject, CanvasObjectProps, CanvasObjectState }
 
 // Components
 import Canvas from './components/Canvas'
-export {
+export type {
   CanvasContext,
   CanvasEventCallback,
   CanvasProps,
@@ -21,5 +21,5 @@ export {
   WebGL,
   WebGL2,
   Bitmap,
-} from './components/Canvas'
+} from './components/Canvas.d'
 export default Canvas

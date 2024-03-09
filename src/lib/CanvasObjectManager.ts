@@ -1,4 +1,4 @@
-import { CanvasContext, Context2D } from '../components/Canvas'
+import type { CanvasContext, Context2D } from '../components/Canvas.d'
 import CanvasObject, {
   CanvasObjectState,
   CanvasObjectProps,
