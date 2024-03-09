@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-## [Unreleased]
+## [Version 1.2.7] 2024-03-09
 
 ## Changed
 
