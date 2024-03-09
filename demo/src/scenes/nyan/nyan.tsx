@@ -66,6 +66,7 @@ function Nyan() {
       update={update}
       frameRate={1}
       fullscreen={fullscreen}
+      nogrid
       // hideCursor={fullscreen}
     />
   )

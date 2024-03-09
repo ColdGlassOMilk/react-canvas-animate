@@ -35,9 +35,12 @@ All notable changes to this project will be documented in this file.
 ## Changed
 
 - Updated `CanvasObject` and `CanvasObjectManager` (renamed to `ObjectManager`)
+
   - Renamed `args` to `props`
   - Removed `args` from `render()` method
   - Shortened Type names from `CanvasObject*` to `Object*`
+
+- Wrapped update setInterval callback in min/max guards of 0.01 to 1000. Allows settings frameRate to 0 to pause update
 
 ## [Version 1.2.6] 2024-03-09
 

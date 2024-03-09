@@ -60,19 +60,28 @@ export default function DemoScene() {
               }
               break
             case 'wheel':
-              const newZoom = zoom - ((event as WheelEvent).deltaY / 1000) * zoom
+              const newZoom =
+                zoom - ((event as WheelEvent).deltaY / 1000) * zoom
               setZoom(Math.min(1000, Math.max(4, newZoom)))
               break
           }
         },
-        eventTypes: ['mousemove', 'mousedown', 'mouseup', 'dblclick', 'keydown', 'wheel'],
+        eventTypes: [
+          'mousemove',
+          'mousedown',
+          'mouseup',
+          'dblclick',
+          'keydown',
+          'wheel',
+        ],
       }}
       fullscreen={fullscreen}
       width={1024}
       height={768}
       gridSize={zoom}
-      // nogrid={hideGrid}
-      nogrid
+      nogrid={hideGrid}
+      frameRate={0}
+      // nogrid
     />
   )
 }

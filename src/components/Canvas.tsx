@@ -103,10 +103,14 @@ const Canvas = <T extends CanvasContext = Context2D>({
     }
 
     loop()
-    intervalID = setInterval(loop, 1000 / (frameRate || 60))
+
+    if (frameRate !== 0) {
+      let interval = Math.max(0.01, Math.min(1000, 1000 / (frameRate || 60)))
+      intervalID = setInterval(loop, interval)
+    }
 
     return () => clearInterval(intervalID)
-  }, [update, frameRate])
+  }, [update])
 
   // Callback for handling canvas resize
   const resizeCanvas = useCallback(() => {
@@ -177,7 +181,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
     window.addEventListener('resize', resizeCanvas)
 
     return () => window.removeEventListener('resize', resizeCanvas)
-  }, [fullscreen, resizeCanvas])
+  }, [fullscreen])
 
   // Handle canvas events
   useEffect(() => {
@@ -199,7 +203,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [events, eventHandler])
+  }, [events])
 
   const canvasStyle: React.CSSProperties = {
     cursor: hideCursor ? 'none' : 'auto',
