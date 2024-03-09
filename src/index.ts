@@ -3,13 +3,10 @@ import ImageLoader from './util/ImageLoader'
 export { ImageLoader }
 
 // Lib
-import CanvasObjectManager from './lib/CanvasObjectManager'
-export { CanvasObjectManager }
-import CanvasObject, {
-  CanvasObjectProps,
-  CanvasObjectState,
-} from './lib/CanvasObject'
-export { CanvasObject, CanvasObjectProps, CanvasObjectState }
+import ObjectManager from './lib/CanvasObjectManager'
+export { ObjectManager }
+import CanvasObject, { ObjectProps, ObjectState } from './lib/CanvasObject'
+export { CanvasObject, ObjectProps, ObjectState }
 
 // Components
 import Canvas from './components/Canvas'

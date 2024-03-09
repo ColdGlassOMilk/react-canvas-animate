@@ -1,21 +1,18 @@
 import type { CanvasContext, Context2D } from '../components/Canvas'
-import CanvasObject, {
-  CanvasObjectState,
-  CanvasObjectProps,
-} from './CanvasObject'
+import CanvasObject, { ObjectState, ObjectProps } from './CanvasObject'
 
-class CanvasObjectManager<
-  T extends CanvasObject = CanvasObject,
-  S extends CanvasObjectState = CanvasObjectState,
-  P extends CanvasObjectProps = CanvasObjectProps,
-  C extends CanvasContext = Context2D,
+class ObjectManager<
+  Type extends CanvasObject = CanvasObject,
+  State extends ObjectState = ObjectState,
+  Props extends ObjectProps = ObjectProps,
+  Context extends CanvasContext = Context2D,
 > {
-  private objects: T[] = []
-  private context: C
+  private objects: Type[] = []
+  private context: Context
 
   constructor(
-    context: C,
-    objects: [new (context: C, state: S) => T, S][] = [],
+    context: Context,
+    objects: [new (context: Context, state: State) => Type, State][] = [],
   ) {
     this.context = context
     this.objects = this.createList(objects)
@@ -24,26 +21,26 @@ class CanvasObjectManager<
   // Stack methods
   // ---------------
 
-  add(object: T): void {
+  add(object: Type): void {
     this.objects.push(object)
   }
 
-  remove(object: T): void {
+  remove(object: Type): void {
     const index = this.objects.indexOf(object)
     if (index !== -1) {
       this.objects.splice(index, 1)
     }
   }
 
-  push(...newObjects: T[]): void {
+  push(...newObjects: Type[]): void {
     this.objects.push(...newObjects)
   }
 
-  pop(count: number = 1): T[] {
+  pop(count: number = 1): Type[] {
     return this.objects.splice(-count, count)
   }
 
-  shift(count: number = 1): T[] {
+  shift(count: number = 1): Type[] {
     return this.objects.splice(0, count)
   }
 
@@ -51,10 +48,12 @@ class CanvasObjectManager<
     this.objects = []
   }
 
-  // Factory method
+  // Factory methods
   // ---------------
 
-  createList(objects: [new (context: C, state: S) => T, S][]): T[] {
+  createList(
+    objects: [new (context: Context, state: State) => Type, State][],
+  ): Type[] {
     const newObjects = objects.map(([ObjectClass, state]) => {
       const newObject = new ObjectClass(this.context, state)
       this.add(newObject)
@@ -63,7 +62,10 @@ class CanvasObjectManager<
     return newObjects
   }
 
-  create(ObjectClass: new (context: C, state: S) => T, state: S): T {
+  create(
+    ObjectClass: new (context: Context, state: State) => Type,
+    state: State,
+  ): Type {
     const newObject = new ObjectClass(this.context, state)
     this.add(newObject)
     return newObject
@@ -72,17 +74,23 @@ class CanvasObjectManager<
   // Callbacks
   // ---------------
 
-  update(_args: P): void {
+  // render(_props: Props): void {
+  //   for (const object of this.objects) {
+  //     object.callRender(_props)
+  //   }
+  // }
+
+  render(): void {
     for (const object of this.objects) {
-      object.callUpdate(_args)
+      object.callRender()
     }
   }
 
-  render(_args: P): void {
+  update(_props: Props): void {
     for (const object of this.objects) {
-      object.callRender(_args)
+      object.callUpdate(_props)
     }
   }
 }
 
-export default CanvasObjectManager
+export default ObjectManager

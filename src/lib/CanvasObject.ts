@@ -1,7 +1,7 @@
 import type { CanvasContext, Context2D } from '../components/Canvas'
 
-export type CanvasObjectState = Record<string, unknown>
-export type CanvasObjectProps = Record<string, unknown>
+export type ObjectState = Record<string, unknown>
+export type ObjectProps = Record<string, unknown>
 
 interface CanvasObjectInterface {
   render?(): void
@@ -9,27 +9,31 @@ interface CanvasObjectInterface {
 }
 
 abstract class CanvasObject<
-  S extends CanvasObjectState = CanvasObjectState,
-  P extends CanvasObjectProps = CanvasObjectProps,
-  T extends CanvasContext = Context2D,
+  State extends ObjectState = ObjectState,
+  Props extends ObjectProps = ObjectProps,
+  Context extends CanvasContext = Context2D,
 > implements CanvasObjectInterface
 {
-  protected context: T
-  protected state: S = {} as S
-  protected args: P = {} as P
+  protected context: Context
+  protected state: State = {} as State
+  protected props: Props = {} as Props
 
-  constructor(context: T, state?: S) {
+  constructor(context: Context, state?: State) {
     this.context = context
-    this.state = state as S
+    this.state = state as State
   }
 
-  callRender(_args: P): void {
-    this.args = _args as P
+  // callRender(_args: Props): void {
+  //   this.props = _args as Props
+  //   this.render()
+  // }
+
+  callRender(): void {
     this.render()
   }
 
-  callUpdate(_args: P): void {
-    this.args = _args as P
+  callUpdate(_props: Props): void {
+    this.props = _props as Props
     this.update()
   }
 
