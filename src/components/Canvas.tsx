@@ -12,11 +12,11 @@ export interface CanvasEventCallback {
   eventTypes: string[]
 }
 
-export interface CanvasProps<T extends CanvasContext = Context2D>
+export interface CanvasProps<Context extends CanvasContext = Context2D>
   extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
-  init?: (context: T) => void
-  render?: (context: T, deltaTime: number) => void
-  update?: (context: T, deltaTime: number) => void
+  init?: (context: Context) => void
+  render?: (context: Context, deltaTime: number) => void
+  update?: (context: Context, deltaTime: number) => void
   type?: ContextType
   attributes?: Record<string, unknown>
   events?: CanvasEventCallback
@@ -35,7 +35,7 @@ export interface CanvasState {
   left: string
 }
 
-const Canvas = <T extends CanvasContext = Context2D>({
+const Canvas = <Context extends CanvasContext = Context2D>({
   init,
   render,
   update,
@@ -49,9 +49,9 @@ const Canvas = <T extends CanvasContext = Context2D>({
   nogrid,
   children,
   ...rest
-}: CanvasProps<T>) => {
+}: CanvasProps<Context>) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const contextRef = useRef<T>()
+  const contextRef = useRef<Context>()
   const renderTimeRef = useRef<number>(performance.now())
   const updateTimeRef = useRef<number>(performance.now())
   const stateRef = useRef<CanvasState | null>(null)
@@ -164,7 +164,7 @@ const Canvas = <T extends CanvasContext = Context2D>({
     const canvas = canvasRef.current
     if (!canvas || contextRef.current) return
 
-    contextRef.current = canvas.getContext(type || '2d', attributes) as T
+    contextRef.current = canvas.getContext(type || '2d', attributes) as Context
 
     if (init) init(contextRef.current)
   }, [init])
@@ -205,27 +205,39 @@ const Canvas = <T extends CanvasContext = Context2D>({
     return () => removeEventListeners()
   }, [events])
 
-  const canvasStyle: React.CSSProperties = {
-    cursor: hideCursor ? 'none' : 'auto',
-    outline: 'none', // Hide tab-index border
+  // Build canvas styles
+  // --------------
+
+  const getCanvasStyles = (): React.CSSProperties => {
+    // Base styles
+    const baseStyle: React.CSSProperties = {
+      cursor: hideCursor ? 'none' : 'auto',
+      outline: 'none', // Hide tab-index border
+    }
+
+    gridSize = gridSize ? gridSize : 20
+    const gridHalf = gridSize / 2
+    const gridStyle: React.CSSProperties = {
+      background:
+        'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
+      backgroundSize: `${gridSize}px ${gridSize}px`,
+      backgroundPosition: `0 0, 0 ${gridHalf}px, ${gridHalf}px ${-gridHalf}px, ${-gridHalf}px 0px`,
+    }
+
+    const currentStyle = { ...rest.style } // User defined styles
+
+    const mergedStyle = nogrid
+      ? { ...baseStyle, ...currentStyle } // No grid
+      : { ...baseStyle, ...gridStyle, ...currentStyle } // With grid
+
+    return mergedStyle
   }
 
-  gridSize = gridSize ? gridSize : 20
-  const gridHalf = gridSize / 2
-  const gridStyle: React.CSSProperties = {
-    background:
-      'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
-    backgroundSize: `${gridSize}px ${gridSize}px`,
-    backgroundPosition: `0 0, 0 ${gridHalf}px, ${gridHalf}px ${-gridHalf}px, ${-gridHalf}px 0px`,
-  }
+  // Component
+  // --------------
 
   return (
-    <canvas
-      ref={canvasRef}
-      tabIndex={0}
-      style={nogrid ? canvasStyle : { ...canvasStyle, ...gridStyle }}
-      {...rest}
-    >
+    <canvas ref={canvasRef} tabIndex={0} {...rest} style={getCanvasStyles()}>
       {children}
     </canvas>
   )

@@ -137,7 +137,7 @@ Additional props are defined as:
 
 - `fullscreen` boolean
 
-  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed. Override with `style={{ position: 'absolute' }}` or `position: undefined`
+  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed.
 
 - `nogrid` boolean
 
@@ -253,7 +253,7 @@ A helper class is included to ease in loading image data programmatically. See e
 
   Returns the specified image. If image is not loaded, returns an empty Image() instance.
 
-## CanvasObject & CanvasObjectManager
+## CanvasObject & ObjectManager
 
 Some rudimentary classes are provided to better encapsulate objects. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
 
@@ -277,7 +277,7 @@ export class NyanCat extends CanvasObject {
   private images: ImageLoader
 
   constructor(context: Context2D, state: ObjectState) {
-    super(context)
+    super(context, state)
     this.images = new ImageLoader([NyanImage])
   }
 
