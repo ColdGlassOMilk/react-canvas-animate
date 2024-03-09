@@ -32,8 +32,8 @@ class ObjectManager<
     }
   }
 
-  push(...newObjects: Type[]): void {
-    this.objects.push(...newObjects)
+  push(...objects: Type[]): void {
+    this.objects.push(...objects)
   }
 
   pop(count: number = 1): Type[] {

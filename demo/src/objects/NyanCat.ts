@@ -2,21 +2,21 @@ import {
   Context2D,
   ImageLoader,
   CanvasObject,
-  CanvasObjectState,
-  CanvasObjectProps,
-  CanvasObjectManager,
+  ObjectState,
+  ObjectProps,
+  ObjectManager,
 } from 'react-canvas-animate'
 
 import NyanImage from './images/nyan.png'
 
-interface NyanState extends CanvasObjectState {
+interface NyanState extends ObjectState {
   frameCount?: number
   isAwesome?: boolean
   x: number
   y: number
 }
 
-interface NyanProps extends CanvasObjectProps {
+interface NyanProps extends ObjectProps {
   deltaTime: number
 }
 
@@ -45,8 +45,4 @@ export class NyanCat extends CanvasObject<NyanState, NyanProps> {
   }
 }
 
-export class CatManager extends CanvasObjectManager<
-  NyanCat,
-  NyanState,
-  NyanProps
-> {}
+export class CatManager extends ObjectManager<NyanCat, NyanState, NyanProps> {}

@@ -1,10 +1,6 @@
-import {
-  CanvasObject,
-  CanvasObjectState,
-  ImageLoader,
-} from 'react-canvas-animate'
+import { CanvasObject, ObjectState, ImageLoader } from 'react-canvas-animate'
 
-export interface SimpleState extends CanvasObjectState {
+export interface SimpleState extends ObjectState {
   images: ImageLoader
 }
 

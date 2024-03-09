@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import Canvas, {
   Context2D,
-  CanvasObjectManager,
+  ObjectManager,
   ImageLoader,
 } from 'react-canvas-animate'
 
@@ -11,12 +11,12 @@ import { Simple, SimpleState } from '../../objects/Simple'
 function Nyan() {
   const [fullscreen, setFullscreen] = useState(true)
   const catRef = useRef<CatManager>()
-  const objectRef = useRef<CanvasObjectManager<Simple, SimpleState>>()
+  const objectRef = useRef<ObjectManager<Simple, SimpleState>>()
 
   const init = (ctx: Context2D) => {
     // Method 1
     const catMan = (catRef.current = new CatManager(ctx))
-    objectRef.current = new CanvasObjectManager<Simple, SimpleState>(ctx, [
+    objectRef.current = new ObjectManager<Simple, SimpleState>(ctx, [
       [Simple, { images: new ImageLoader() }],
     ])
 
@@ -34,7 +34,7 @@ function Nyan() {
   const render = (ctx: Context2D, time: number) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    catRef.current?.render({ deltaTime: time })
+    catRef.current?.render()
   }
 
   const update = (ctx: Context2D, time: number) => {

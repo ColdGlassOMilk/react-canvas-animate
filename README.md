@@ -63,7 +63,7 @@ export default function App() {
   return (
     <Canvas<Context2D> // Define the CanvasContext that will be used
       type='2d' // '2d' | 'webgl' | 'webgl2' | 'bitmaprenderer'
-      attributes={{ alpha: true, desyncronized: true }}
+      attributes={{ alpha: true }}
     />
   )
 }
@@ -119,7 +119,7 @@ export default function App() {
 
 - `events` { handleEvent: (event: Event) => void, eventTypes: string[] }
 
-  Event listener callback (see "Handle Events" section below)
+  Event listener callback (see "Handle Events" section below).
 
 #### Props
 
@@ -153,7 +153,13 @@ Additional props are defined as:
 
 ## Handle Events
 
-Some functionality is included to attach event listeners to the canvas.
+Standard event hooks work as usual:
+
+```ts
+<Canvas onClick={() => alert('Click')} />
+```
+
+Some functionality is also included to attach a primary event listener to the canvas.
 
 The `events` prop accepts an object structured as
 
@@ -249,8 +255,6 @@ A helper class is included to ease in loading image data programmatically. See e
 
 ## CanvasObject & CanvasObjectManager
 
-> These classes are a work in progress, please use them at your own risk.
-
 Some rudimentary classes are provided to better encapsulate objects. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
 
 You can extend these classes to suit your needs (e.g. Scenes, Layers, Components, etc.) or instantiate them directly.
@@ -260,14 +264,19 @@ You can extend these classes to suit your needs (e.g. Scenes, Layers, Components
 Let's create an object to represent Nyan cat using a `CanvasObject`
 
 ```ts
-import { Context2D, CanvasObject, ImageLoader } from 'react-canvas-animate'
+import {
+  Context2D,
+  CanvasObject,
+  ObjectState,
+  ImageLoader,
+} from 'react-canvas-animate'
 
 import NyanImage from './nyan.png'
 
 export class NyanCat extends CanvasObject {
   private images: ImageLoader
 
-  constructor(context: Context2D) {
+  constructor(context: Context2D, state: ObjectState) {
     super(context)
     this.images = new ImageLoader([NyanImage])
   }
@@ -288,15 +297,15 @@ And then render it in our component using the `CanvasObjectManager`:
 
 ```ts
 import { useRef } from 'react'
-import Canvas, { Context2D, CanvasObjectManager } from 'react-canvas-animate'
+import Canvas, { Context2D, ObjectManager } from 'react-canvas-animate'
 
 import { NyanCat } from '@/objects/NyanCat'
 
 export default function Nyan() {
-  const objectRef = useRef<CanvasObjectManager>()
+  const objectRef = useRef<ObjectManager>()
 
   const init = (ctx: Context2D) => {
-    const objects = (objectRef.current = new CanvasObjectManager(ctx))
+    const objects = (objectRef.current = new ObjectManager(ctx))
 
     // Use factory method to instantiate our NyanCat object
     objects.create(NyanCat, { isAwesome: true })
@@ -305,7 +314,7 @@ export default function Nyan() {
   const render = (ctx: Context2D) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render({})
+    objectRef.current?.render()
   }
 
   const update = (ctx: Context2D, time: number) => {
@@ -324,17 +333,17 @@ Get Creative! These classes lend themselves to being quite flexible in that you 
 
 ```ts
 import {
-  CanvasObjectManager
-  CanvasObjectState
-  CanvasObjectProps
+  ObjectManager
+  ObjectState
+  ObjectProps
   CanvasObject
 } from 'react-canvas-animate'
 
-interface LayerState extends CanvasObjectState {
+interface LayerState extends ObjectState {
   id: number
 }
 
-interface LayerProps extends CanvasObjectProps {
+interface LayerProps extends ObjectProps {
   cursor: {
     x: number
     y: number
@@ -343,7 +352,7 @@ interface LayerProps extends CanvasObjectProps {
 
 class Layer extends CanvasObject<LayerState, LayerProps> {}
 
-class LayerManager extends CanvasObjectManager<Layer, LayerState, LayerProps> {}
+class LayerManager extends ObjectManager<Layer, LayerState, LayerProps> {}
 
 class MyCustomLayer extends Layer {
   update() {

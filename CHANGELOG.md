@@ -30,6 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+## Changed
+
+- Updated `CanvasObject` and `CanvasObjectManager` (renamed to `ObjectManager`)
+  - Renamed `args` to `props`
+  - Removed `args` from `render()` method
+  - Shortened Type names from `CanvasObject*` to `Object*`
+
 ## [Version 1.2.6] 2024-03-09
 
 ### Fixed
