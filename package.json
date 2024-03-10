@@ -1,16 +1,17 @@
 {
   "name": "react-canvas-animate",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "React canvas wrapper with functionality for animation and event handling. Includes Typescript and commonJS support.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "scripts": {
     "prepare": "npm run build && node prepare.js",
-    "build": "npm run build:esm && npm run build:cjs && npm run bundle",
+    "build": "npm run build:esm && npm run build:cjs && npm run bundle && npm run clean",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "bundle": "esbuild dist/esm/index.js --bundle --minify --platform=node --target=es6 --external:react --external:react-dom --outfile=dist/bundle.esm.js && esbuild dist/cjs/index.js --bundle --minify --platform=node --target=es6 --external:react --external:react-dom --outfile=dist/bundle.cjs.js",
+    "clean": "find dist/esm -type f -name '*.js' -delete && find dist/cjs -type f -name '*.js' -delete",
     "start": "npm run dev & npm run --prefix ./demo start",
     "dev": "NODE_ENV=development node prepare.js && tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
