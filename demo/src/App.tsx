@@ -6,9 +6,9 @@ import Canvas from 'react-canvas-animate'
 function App() {
   return (
     <>
-      {/* <Nyan />
-      <DemoScene /> */}
-      <Canvas style={{ border: '10px red solid' }} />
+      {/* <Nyan /> */}
+      <DemoScene />
+      {/* <Canvas style={{ border: '10px red solid' }} /> */}
     </>
   )
 }

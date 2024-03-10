@@ -20,6 +20,7 @@ export interface CanvasProps<Context extends CanvasContext = Context2D>
   type?: ContextType
   attributes?: Record<string, unknown>
   events?: CanvasEventCallback
+  documentEvents?: CanvasEventCallback
   fullscreen?: boolean
   hideCursor?: boolean
   frameRate?: number
@@ -42,6 +43,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
   type,
   attributes,
   events,
+  documentEvents,
   fullscreen,
   hideCursor,
   frameRate,
@@ -69,7 +71,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     renderTimeRef.current = currentTime
 
     if (render) render(context, deltaTime)
-  }, [render])
+  }, [])
 
   // Callback for rendering loop
   const renderLoop = useCallback(() => {
@@ -110,7 +112,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     }
 
     return () => clearInterval(intervalID)
-  }, [update])
+  }, [])
 
   // Callback for handling canvas resize
   const resizeCanvas = useCallback(() => {
@@ -149,12 +151,14 @@ const Canvas = <Context extends CanvasContext = Context2D>({
   }, [fullscreen])
 
   // Callback for handling events
-  const eventHandler = useCallback(
-    (event: Event) => {
-      if (events) events.handleEvent(event)
-    },
-    [events],
-  )
+  const eventHandler = useCallback((event: Event) => {
+    if (events) events.handleEvent(event)
+  }, [])
+
+  // Callback for handling document events
+  const documentEventHandler = useCallback((event: Event) => {
+    if (documentEvents) documentEvents.handleEvent(event)
+  }, [])
 
   // Effect Hooks
   // --------------
@@ -167,7 +171,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     contextRef.current = canvas.getContext(type || '2d', attributes) as Context
 
     if (init) init(contextRef.current)
-  }, [init])
+  }, [])
 
   // Start rendering loop
   useEffect(renderLoop, [])
@@ -203,7 +207,30 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [events])
+  }, [])
+
+  // Handle document events
+  useEffect(() => {
+    const context = contextRef.current
+    if (!documentEvents || !context) return
+
+    const addEventListeners = () => {
+      documentEvents.eventTypes.forEach((eventType) => {
+        console.log('Adding event listener:', eventType)
+        document.addEventListener(eventType, documentEventHandler)
+      })
+    }
+
+    const removeEventListeners = () => {
+      documentEvents.eventTypes.forEach((eventType) => {
+        document.removeEventListener(eventType, documentEventHandler)
+      })
+    }
+
+    addEventListeners()
+
+    return () => removeEventListeners()
+  }, [])
 
   // Build canvas styles
   // --------------

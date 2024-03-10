@@ -1,3 +1,4 @@
+import { clear } from 'console'
 import { useState, useRef } from 'react'
 import Canvas, { Context2D } from 'react-canvas-animate'
 
@@ -5,7 +6,7 @@ export default function DemoScene() {
   const [fullscreen, setFullscreen] = useState(true)
   const [hideGrid, setHideGrid] = useState(false)
   const [zoom, setZoom] = useState(20)
-  const [clear, setClear] = useState(false)
+  const clearRef = useRef(false)
   const cursorRef = useRef({ x: 0, y: 0 })
   const clickRef = useRef(false)
   return (
@@ -25,12 +26,12 @@ export default function DemoScene() {
           ctx.fill()
           ctx.restore()
         }
-        if (clear) {
+        if (clearRef.current) {
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-          setClear(false)
+          clearRef.current = false
         }
       }}
-      events={{
+      documentEvents={{
         handleEvent: (event: Event) => {
           switch (event.type) {
             case 'mousemove':
@@ -47,7 +48,7 @@ export default function DemoScene() {
               clickRef.current = false
               break
             case 'dblclick':
-              setClear(true)
+              clearRef.current = true
               break
             case 'keydown':
               switch ((event as KeyboardEvent).key) {
