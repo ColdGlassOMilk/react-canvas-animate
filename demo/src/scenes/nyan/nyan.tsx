@@ -60,13 +60,15 @@ function Nyan() {
 
   return (
     <Canvas
-      events={{ handleEvent, eventTypes: ['keydown'] }}
+      documentEvents={{ handleEvent, eventTypes: ['keydown'] }}
       init={init}
       render={render}
       update={update}
       frameRate={1}
       fullscreen={fullscreen}
-      nogrid
+      nogrid={fullscreen}
+      width={640}
+      height={480}
       // hideCursor={fullscreen}
     />
   )

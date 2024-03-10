@@ -1,4 +1,3 @@
-import { clear } from 'console'
 import { useState, useRef } from 'react'
 import Canvas, { Context2D } from 'react-canvas-animate'
 

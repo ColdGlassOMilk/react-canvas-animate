@@ -71,7 +71,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     renderTimeRef.current = currentTime
 
     if (render) render(context, deltaTime)
-  }, [])
+  }, [render])
 
   // Callback for rendering loop
   const renderLoop = useCallback(() => {
@@ -112,7 +112,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     }
 
     return () => clearInterval(intervalID)
-  }, [])
+  }, [update])
 
   // Callback for handling canvas resize
   const resizeCanvas = useCallback(() => {
@@ -151,14 +151,20 @@ const Canvas = <Context extends CanvasContext = Context2D>({
   }, [fullscreen])
 
   // Callback for handling events
-  const eventHandler = useCallback((event: Event) => {
-    if (events) events.handleEvent(event)
-  }, [])
+  const eventHandler = useCallback(
+    (event: Event) => {
+      if (events) events.handleEvent(event)
+    },
+    [events],
+  )
 
   // Callback for handling document events
-  const documentEventHandler = useCallback((event: Event) => {
-    if (documentEvents) documentEvents.handleEvent(event)
-  }, [])
+  const documentEventHandler = useCallback(
+    (event: Event) => {
+      if (documentEvents) documentEvents.handleEvent(event)
+    },
+    [documentEvents],
+  )
 
   // Effect Hooks
   // --------------
@@ -171,7 +177,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     contextRef.current = canvas.getContext(type || '2d', attributes) as Context
 
     if (init) init(contextRef.current)
-  }, [])
+  }, [init])
 
   // Start rendering loop
   useEffect(renderLoop, [])
@@ -207,7 +213,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [])
+  }, [events])
 
   // Handle document events
   useEffect(() => {
@@ -216,7 +222,6 @@ const Canvas = <Context extends CanvasContext = Context2D>({
 
     const addEventListeners = () => {
       documentEvents.eventTypes.forEach((eventType) => {
-        console.log('Adding event listener:', eventType)
         document.addEventListener(eventType, documentEventHandler)
       })
     }
@@ -230,7 +235,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [])
+  }, [documentEvents])
 
   // Build canvas styles
   // --------------
