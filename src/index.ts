@@ -1,6 +1,8 @@
 // Utils
 import ImageLoader from './util/ImageLoader'
 export { ImageLoader }
+import { rgbAngle } from './util/helpers'
+export { rgbAngle }
 
 // Lib
 import ObjectManager from './lib/CanvasObjectManager'

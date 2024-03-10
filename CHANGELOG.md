@@ -32,6 +32,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Version 1.2.9] 2024-03-09
 
+### Added
+
+- Utility function `rgbAngle` for making fun rainbow colors
+
 ### Changed
 
 - Reduced the final package size with a `clean` stage to remove transpiled files
