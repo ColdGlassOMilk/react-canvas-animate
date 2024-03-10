@@ -230,6 +230,7 @@ export default function App() {
   return (
     <Canvas
       events={{ handleEvent, eventTypes: ['keydown', 'mousemove'] }}
+      documentEvents={{ handleEvents, eventTypes: [] }}
       fullscreen={fullscreen}
       render={render}
     />
@@ -257,133 +258,114 @@ A helper class is included to ease in loading image data programmatically. See e
 
   Returns the specified image. If image is not loaded, returns an empty Image() instance.
 
-## CanvasObject & ObjectManager
+## CanvasObject
 
-Some rudimentary classes are provided to better encapsulate objects. Like the Canvas component, they take a generic `CanvasContext` type (default is `Context2D`)
+`CanvasObject` is provided to better encapsulate things. It's highly flexible and can be extended to suit your needs (e.g. Scenes, Layers, Components, etc.)
 
-You can extend these classes to suit your needs (e.g. Scenes, Layers, Components, etc.) or instantiate them directly.
+- `CanvasObject` _namespace_
+
+  - `Base` _class_ CanvasObject `<State, Props, CanvasContext = Context2D>`
+
+    - `constructor(context: CanvasContext, state: CanvasObject.State)`
+    - `this.context` Provides access to the CanvasContext passed during init
+    - `this.state` Initial state values
+    - `this.props` Access values passed during update as props
+
+  - `Manager` CanvasObjectManager `<Object, State, Props, CanvasContext = Context2D>`
+
+    - `constructor(context: CanvasContext, objects?: type T[])`
+    - `this.objects` _CanvasObject[]_ Access collection of managed objects
+    - `update(props: Props)` _void_ Internally calls update() method on all objects
+    - `render` _void_ Internally calls render() method on all objects
+
+  - `State` _Type_ Record<string, unknown> _{}_
+  - `Props` _Type_ Record<string, unknown> _{}_
 
 #### Example
 
 Let's create an object to represent Nyan cat using a `CanvasObject`
 
 ```ts
-import {
-  Context2D,
-  CanvasObject,
-  ObjectState,
-  ImageLoader,
-} from 'react-canvas-animate'
+import { CanvasObject, Context2D, ImageLoader } from 'react-canvas-animate'
 
 import NyanImage from './nyan.png'
 
-export class NyanCat extends CanvasObject {
+// First, let's define the initial state
+interface CatState extends CanvasObject.State {
+  isAwesome: boolean
+}
+
+// Then we'll define the types required in props
+interface CatProps extends CanvasObject.Props {
+  deltaTime: number
+}
+
+// Then we'll build our custom object
+// We're loading the image directly instead of passing it for sake of brevity
+export class Cat extends CanvasObject.Base<CatState, CatProps> {
   private images: ImageLoader
 
-  constructor(context: Context2D, state: ObjectState) {
+  constructor(context: Context2D, state: CatState) {
     super(context, state)
     this.images = new ImageLoader([NyanImage])
   }
 
   render(): void {
+    // const ctx = this.context
+    // const { width, height } = ctx.canvas
     const img = this.images.getImage(NyanImage)
     this.context.drawImage(img, 0, 0)
   }
 
   update(): void {
-    console.log('Nyan State', this.state) // { isAwesome: true }
-    console.log('Nyan Props', this.args) // { deltaTime: 1000 }
+    console.log('Cat State', this.state) // { isAwesome: true }
+    console.log('Cat Props', this.props) // { deltaTime: 1000 }
   }
 }
+
+// Lastly, we'll build a custom Manager for our object type
+export class CatManager extends CanvasObject.Manager<Cat, CatState, CatProps> {}
 ```
 
-And then render it in our component using the `CanvasObjectManager`:
+And then render it in our component using the `CatManager` that we created:
 
 ```ts
 import { useRef } from 'react'
-import Canvas, { Context2D, ObjectManager } from 'react-canvas-animate'
+import Canvas, { Context2D } from 'react-canvas-animate'
 
-import { NyanCat } from '@/objects/NyanCat'
+import { Cat, CatManager } from '../objects/Cat'
 
 export default function Nyan() {
-  const objectRef = useRef<ObjectManager>()
+  const catMan = useRef<CatManager>()
 
   const init = (ctx: Context2D) => {
-    const objects = (objectRef.current = new ObjectManager(ctx))
+    const cats = (catMan.current = new CatManager(ctx))
 
-    // Use factory method to instantiate our NyanCat object
-    objects.create(NyanCat, { isAwesome: true })
+    // Use factory method to instantiate our Cat object
+    cats.create(Cat, { isAwesome: true })
   }
 
   const render = (ctx: Context2D) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
-    objectRef.current?.render()
+    catMan.current?.render()
   }
 
   const update = (ctx: Context2D, time: number) => {
-    objectRef.current?.update({ deltaTime: time })
+    catMan.current?.update({ deltaTime: time })
   }
 
   return (
-    <Canvas init={init} render={render} frameRate={1} fullscreen />
+    <Canvas init={init} render={render} update={update} frameRate={1} />
   )
 }
 ```
 
-#### Extending Functionality
-
-Get Creative! These classes lend themselves to being quite flexible in that you could define something for example:
-
-```ts
-import {
-  ObjectManager
-  ObjectState
-  ObjectProps
-  CanvasObject
-} from 'react-canvas-animate'
-
-interface LayerState extends ObjectState {
-  id: number
-}
-
-interface LayerProps extends ObjectProps {
-  cursor: {
-    x: number
-    y: number
-  }
-}
-
-class Layer extends CanvasObject<LayerState, LayerProps> {}
-
-class LayerManager extends ObjectManager<Layer, LayerState, LayerProps> {}
-
-class MyCustomLayer extends Layer {
-  update() {
-    console.log('Layer ID', this.state.id)
-    console.log('Cursor', this.args.cursor)
-  }
-}
-
-// ...
-
-// In your Canvas component...
-const layerRef = useRef<LayerManager>()
-
-// Init
-layerRef.current = new LayerManager(context, [
-  [MyCustomLayer, { id: 1 }],
-  [MyCustomLayer, { id: 2 }],
-])
-layerRef.current.create(MyCustomLayer, { id: 3 })
-
-// Update
-layerRef.current?.update({ cursor: { x: 0, y: 0 } })
-```
+Get Creative! These classes lend themselves to being quite flexible.
 
 ## Helpers
 
-- `rgbAngle(angle: number) => string` Takes any number and provides an rgb color (scale 0-360)
+- `rgbAngle(angle: number) => string` 🌈 Takes any number and provides an rgb color (scale 0-360)
 
   ```
   ctx.shadowColor = rgbAngle(angle)

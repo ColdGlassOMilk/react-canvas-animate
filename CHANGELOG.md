@@ -30,6 +30,18 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Version 1.3.0] 2024-03-10
+
+### Changed
+
+- Refactored the `CanvasObject`, `ObjectState`, `ObjectProps`, and `CanvasObjectManager` into a single namespace, now organized as:
+
+  - `CanvasObject`
+    - `Base` CanvasObject
+    - `Manager` CanvasObjectManager
+    - `State` ObjectState
+    - `Props` ObjectProps
+
 ## [Version 1.2.9] 2024-03-09
 
 ### Added

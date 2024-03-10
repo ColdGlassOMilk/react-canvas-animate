@@ -1,7 +1,7 @@
 import type { CanvasContext, Context2D } from '../components/Canvas'
-import CanvasObject, { ObjectState, ObjectProps } from './CanvasObject'
+import { CanvasObject, ObjectState, ObjectProps } from './CanvasObject'
 
-class ObjectManager<
+export class ObjectManager<
   Type extends CanvasObject = CanvasObject,
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
@@ -92,5 +92,3 @@ class ObjectManager<
     }
   }
 }
-
-export default ObjectManager

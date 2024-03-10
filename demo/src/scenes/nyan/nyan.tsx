@@ -1,24 +1,25 @@
 import { useRef, useState } from 'react'
 import Canvas, {
   Context2D,
-  ObjectManager,
+  CanvasObject,
   ImageLoader,
 } from 'react-canvas-animate'
 
 import { NyanCat, CatManager } from '../../objects/NyanCat'
-import { Simple, SimpleState } from '../../objects/Simple'
+// import { Simple, SimpleState } from '../../objects/Simple'
 
 function Nyan() {
   const [fullscreen, setFullscreen] = useState(true)
   const catRef = useRef<CatManager>()
-  const objectRef = useRef<ObjectManager<Simple, SimpleState>>()
+  const objectRef = useRef<typeof CanvasObject.Manager>()
+  // const objectRef = useRef<CanvasObject.Manager>()
 
   const init = (ctx: Context2D) => {
     // Method 1
     const catMan = (catRef.current = new CatManager(ctx))
-    objectRef.current = new ObjectManager<Simple, SimpleState>(ctx, [
-      [Simple, { images: new ImageLoader() }],
-    ])
+    // objectRef.current = new CanvasObject.Manager<Simple, SimpleState>(ctx, [
+    //   [Simple, { images: new ImageLoader() }],
+    // ])
 
     // objectRef.current.createList([
     //   [Simple, {}],
@@ -39,7 +40,7 @@ function Nyan() {
 
   const update = (ctx: Context2D, time: number) => {
     catRef.current?.update({ deltaTime: time })
-    objectRef.current?.update({})
+    // objectRef.current?.update({})
   }
 
   const handleKeyDown = (event: KeyboardEvent) => {

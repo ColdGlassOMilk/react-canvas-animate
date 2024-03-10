@@ -8,7 +8,7 @@ interface CanvasObjectInterface {
   update?(): void
 }
 
-abstract class CanvasObject<
+export abstract class CanvasObject<
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
   Context extends CanvasContext = Context2D,
@@ -23,11 +23,6 @@ abstract class CanvasObject<
     this.state = state as State
   }
 
-  // callRender(_args: Props): void {
-  //   this.props = _args as Props
-  //   this.render()
-  // }
-
   callRender(): void {
     this.render()
   }
@@ -40,5 +35,3 @@ abstract class CanvasObject<
   render(): void {}
   update(): void {}
 }
-
-export default CanvasObject

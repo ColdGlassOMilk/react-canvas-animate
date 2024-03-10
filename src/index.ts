@@ -5,10 +5,19 @@ import { rgbAngle } from './util/helpers'
 export { rgbAngle }
 
 // Lib
-import ObjectManager from './lib/CanvasObjectManager'
-export { ObjectManager }
-import CanvasObject, { ObjectProps, ObjectState } from './lib/CanvasObject'
-export { CanvasObject, ObjectProps, ObjectState }
+import {
+  CanvasObject as CanvasObjectBase,
+  ObjectState as CanvasObjectState,
+  ObjectProps as CanvasObjectProps,
+} from './lib/CanvasObject'
+import { ObjectManager as CanvasObjectManager } from './lib/ObjectManager'
+
+export namespace CanvasObject {
+  export const Base = CanvasObjectBase
+  export type State = CanvasObjectState
+  export type Props = CanvasObjectProps
+  export const Manager = CanvasObjectManager
+}
 
 // Components
 import Canvas from './components/Canvas'
