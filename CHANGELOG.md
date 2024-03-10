@@ -30,7 +30,11 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-## [Unreleased]
+## [Version 1.2.8] 2024-03-09
+
+### Added
+
+- `documentEvents` callback for attaching event listeners at the document level
 
 ### Fixed
 

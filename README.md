@@ -121,6 +121,10 @@ export default function App() {
 
   Event listener callback (see "Handle Events" section below).
 
+- `documentEvents` { handleEvent: (event: Event) => void, eventTypes: string[] }
+
+  Functions the same as `events`, but attaches to the document instead of the canvas element.
+
 #### Props
 
 All available `HTMLCanvasElement` props are passed to the underlying canvas element. So things like `height`, `width`, `style`, and `children` can all be passed.
