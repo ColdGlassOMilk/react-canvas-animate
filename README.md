@@ -381,6 +381,14 @@ layerRef.current.create(MyCustomLayer, { id: 3 })
 layerRef.current?.update({ cursor: { x: 0, y: 0 } })
 ```
 
+## Helpers
+
+- `rgbAngle(angle: number) => string` Takes any number and provides an rgb color (scale 0-360)
+
+  ```
+  ctx.shadowColor = rgbAngle(angle)
+  ```
+
 ## Contributing
 
 Contributions are welcomed and encouraged.
