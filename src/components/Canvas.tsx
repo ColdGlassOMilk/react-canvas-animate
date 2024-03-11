@@ -112,7 +112,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     }
 
     return () => clearInterval(intervalID)
-  }, [update])
+  }, [update, frameRate])
 
   // Callback for handling canvas resize
   const resizeCanvas = useCallback(() => {
@@ -213,7 +213,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [events])
+  }, [events, eventHandler])
 
   // Handle document events
   useEffect(() => {
@@ -235,7 +235,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     addEventListeners()
 
     return () => removeEventListeners()
-  }, [documentEvents])
+  }, [documentEvents, documentEventHandler])
 
   // Build canvas styles
   // --------------

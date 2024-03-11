@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+## Fixed
+
+- Fixed an issue with useEffect depedencies, event callbacks were missing event handlers, and update loop wasn't being cleared with frameRate changes
+
 ## [Version 1.3.0] 2024-03-10
 
 ### Changed
