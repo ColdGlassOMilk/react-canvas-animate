@@ -1,16 +1,22 @@
-import { DemoScene } from './scenes/demo'
-import Nyan from './scenes/nyan/nyan'
-
-import Canvas from 'react-canvas-animate'
+import { useRef } from 'react'
+import GLRenderer from './components/GLRenderer'
+import { WebGL } from 'react-canvas-animate'
+import { RenderableObjectManager as ObjectManager } from './objects/managers/RenderableObjectManager'
+import { ClearScreen } from './objects/sandbox/ClearScreen'
 
 function App() {
-  return (
-    <>
-      <DemoScene />
-      {/* <Nyan /> */}
-      {/* <Canvas style={{ border: '10px red solid' }} /> */}
-    </>
-  )
+  const objects = useRef<ObjectManager>()
+
+  const init = (gl: WebGL) => {
+    objects.current = new ObjectManager(gl)
+    objects.current.create(ClearScreen, {})
+  }
+
+  const render = (gl: WebGL) => {
+    objects.current?.render()
+  }
+
+  return <GLRenderer postInit={init} render={render} fullscreen />
 }
 
 export default App

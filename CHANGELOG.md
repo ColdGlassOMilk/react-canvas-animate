@@ -34,6 +34,8 @@ All notable changes to this project will be documented in this file.
 
 ## Fixed
 
+- Fixed an issue with the `CanvasObject` and `ObjectManager` class default context of Context2D, set to generic type of `CanvasContext` to correct issue when manually setting the context to anything else (ie. webgl)
+
 - Fixed an issue with useEffect depedencies, event callbacks were missing event handlers, and update loop wasn't being cleared with frameRate changes
 
 ## [Version 1.3.0] 2024-03-10

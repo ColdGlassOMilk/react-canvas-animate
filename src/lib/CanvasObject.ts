@@ -11,7 +11,7 @@ interface CanvasObjectInterface {
 export abstract class CanvasObject<
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
-  Context extends CanvasContext = Context2D,
+  Context extends CanvasContext = CanvasContext,
 > implements CanvasObjectInterface
 {
   protected context: Context
