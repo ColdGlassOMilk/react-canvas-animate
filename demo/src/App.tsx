@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <DemoScene />
-      <Nyan />
+      {/* <Nyan /> */}
       {/* <Canvas style={{ border: '10px red solid' }} /> */}
     </>
   )

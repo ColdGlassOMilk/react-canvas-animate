@@ -2,7 +2,6 @@ import { useState, useRef } from 'react'
 import Canvas, { Context2D, rgbAngle } from 'react-canvas-animate'
 
 export default function DemoScene() {
-  const [fullscreen, setFullscreen] = useState(true)
   const [hideGrid, setHideGrid] = useState(false)
   const [gridZoom, setGridZoom] = useState(40)
   const zoom = useRef(40)
@@ -61,9 +60,18 @@ export default function DemoScene() {
               clearRef.current = true
               break
             case 'keydown':
-              switch ((event as KeyboardEvent).key) {
+              switch ((event as KeyboardEvent).key.toLowerCase()) {
+                case 'escape':
+                  if (document.fullscreenElement) {
+                    document.exitFullscreen()
+                  }
+                  break
                 case 'f':
-                  setFullscreen(!fullscreen)
+                  if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen()
+                  } else {
+                    document.exitFullscreen()
+                  }
                   break
                 case 'g':
                   setHideGrid(!hideGrid)
@@ -88,7 +96,7 @@ export default function DemoScene() {
           'wheel',
         ],
       }}
-      fullscreen={fullscreen}
+      fullscreen
       width={1024}
       height={768}
       gridSize={gridZoom}
