@@ -22,7 +22,7 @@
 import Renderer from './components/Renderer'
 
 function App() {
-  return <Renderer fullscreen />
+  return <Renderer width={1024} height={768} />
 }
 
 export default App
