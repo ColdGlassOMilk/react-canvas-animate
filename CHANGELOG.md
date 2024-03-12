@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+### Added
+
+- Added `onContextMenu` callback to prevent default action
+
 ## [Version 1.3.2] 2024-03-11
 
 ### Fixed

@@ -269,7 +269,13 @@ const Canvas = <Context extends CanvasContext = Context2D>({
   // --------------
 
   return (
-    <canvas ref={canvasRef} tabIndex={0} {...rest} style={getCanvasStyles()}>
+    <canvas
+      ref={canvasRef}
+      tabIndex={0}
+      onContextMenu={(e) => e.preventDefault()}
+      {...rest}
+      style={getCanvasStyles()}
+    >
       {children}
     </canvas>
   )
