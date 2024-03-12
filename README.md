@@ -264,19 +264,21 @@ A helper class is included to ease in loading image data programmatically. See e
 
 - `CanvasObject` _namespace_
 
-  - `Base` _class_ CanvasObject `<State, Props, CanvasContext = Context2D>`
+  - `Base` _class_ CanvasObject `<CanvasContext, State, Props>`
 
     - `constructor(context: CanvasContext, state: CanvasObject.State)`
     - `this.context` Provides access to the CanvasContext passed during init
     - `this.state` Initial state values
     - `this.props` Access values passed during update as props
+    - `render(): void` _(optional)_ abstract callback method
+    - `update(): void`_(optional)_ abtract callback method. `this.props` is updated by `Manager` prior to callback
 
-  - `Manager` CanvasObjectManager `<Object, State, Props, CanvasContext = Context2D>`
+  - `Manager` CanvasObjectManager `<CanvasContext, CanvasObject, State, Props>`
 
     - `constructor(context: CanvasContext, objects?: type T[])`
     - `this.objects` _CanvasObject[]_ Access collection of managed objects
-    - `update(props: Props)` _void_ Internally calls update() method on all objects
     - `render` _void_ Internally calls render() method on all objects
+    - `update(props: Props)` _void_ Internally calls update() method on all objects
 
   - `State` _Type_ Record<string, unknown> _{}_
   - `Props` _Type_ Record<string, unknown> _{}_
@@ -302,7 +304,7 @@ interface CatProps extends CanvasObject.Props {
 
 // Then we'll build our custom object
 // We're loading the image directly instead of passing it for sake of brevity
-export class Cat extends CanvasObject.Base<CatState, CatProps> {
+export class Cat extends CanvasObject.Base<Context2D, CatState, CatProps> {
   private images: ImageLoader
 
   constructor(context: Context2D, state: CatState) {
@@ -324,7 +326,12 @@ export class Cat extends CanvasObject.Base<CatState, CatProps> {
 }
 
 // Lastly, we'll build a custom Manager for our object type
-export class CatManager extends CanvasObject.Manager<Cat, CatState, CatProps> {}
+export class CatManager extends CanvasObject.Manager<
+  Context2D,
+  CatState,
+  CatProps,
+  Cat
+> {}
 ```
 
 And then render it in our component using the `CatManager` that we created:
@@ -351,8 +358,8 @@ export default function Nyan() {
     catMan.current?.render()
   }
 
-  const update = (ctx: Context2D, time: number) => {
-    catMan.current?.update({ deltaTime: time })
+  const update = (ctx: Context2D, deltaTime: number) => {
+    catMan.current?.update({ deltaTime })
   }
 
   return (

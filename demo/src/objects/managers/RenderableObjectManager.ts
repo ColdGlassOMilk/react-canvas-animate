@@ -6,7 +6,7 @@ import {
 } from '../base/RenderableObject'
 
 export class RenderableObjectManager<
-  Type extends RenderableObject = RenderableObject,
   State extends RenderableObjectState = RenderableObjectState,
   Props extends RenderableObjectProps = RenderableObjectProps,
-> extends CanvasObject.Manager<Type, State, Props, WebGL> {}
+  Type extends RenderableObject = RenderableObject,
+> extends CanvasObject.Manager<WebGL, State, Props, Type> {}

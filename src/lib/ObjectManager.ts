@@ -1,11 +1,15 @@
-import type { CanvasContext } from '../components/Canvas'
-import { CanvasObject, ObjectState, ObjectProps } from './CanvasObject'
+import type { CanvasContext, Context2D } from '../components/Canvas'
+import { CanvasObject, ObjectProps, ObjectState } from './CanvasObject'
 
 export class ObjectManager<
-  Type extends CanvasObject = CanvasObject,
+  Context extends CanvasContext = Context2D,
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
-  Context extends CanvasContext = CanvasContext,
+  Type extends CanvasObject<Context, ObjectState, ObjectProps> = CanvasObject<
+    Context,
+    ObjectState,
+    ObjectProps
+  >,
 > {
   protected objects: Type[] = []
   protected context: Context

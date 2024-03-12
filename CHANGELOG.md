@@ -30,9 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Version 1.3.2] 2024-03-11
+
+### Fixed
+
+- Refactored the `CanvasObject` and `ObjectManager` type generics, the default Context was still causing issues, so it is now the first Type argument, the CanvasObject type default is now built from this rather than relying on hard-coded defaults
+
 ## [Version 1.3.1] 2024-03-11
 
-## Fixed
+### Fixed
 
 - Fixed an issue with the `CanvasObject` and `ObjectManager` class default context of Context2D, set to generic type of `CanvasContext` to correct issue when manually setting the context to anything else (ie. webgl)
 

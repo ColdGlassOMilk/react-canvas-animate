@@ -14,7 +14,7 @@ export interface RenderableObjectProps extends RenderableObjectState {}
 export class RenderableObject<
   State extends RenderableObjectState = RenderableObjectState,
   Props extends RenderableObjectProps = RenderableObjectProps,
-> extends CanvasObject.Base<State, Props, WebGL> {
+> extends CanvasObject.Base<WebGL, State, Props> {
   constructor(gl: WebGL, state: State) {
     super(gl, state)
     this.state = {

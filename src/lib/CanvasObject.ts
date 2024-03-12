@@ -1,4 +1,4 @@
-import type { CanvasContext } from '../components/Canvas'
+import type { CanvasContext, Context2D } from '../components/Canvas'
 
 export type ObjectState = Record<string, unknown>
 export type ObjectProps = Record<string, unknown>
@@ -9,9 +9,9 @@ interface CanvasObjectInterface {
 }
 
 export abstract class CanvasObject<
+  Context extends CanvasContext = Context2D,
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
-  Context extends CanvasContext = CanvasContext,
 > implements CanvasObjectInterface
 {
   protected context: Context
