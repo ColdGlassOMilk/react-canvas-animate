@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+### Fixed
+
+- `Canvas` component - context check before calling init
+
 ## [Version 1.3.3] 2024-03-11
 
 ### Added

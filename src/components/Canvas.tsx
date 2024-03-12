@@ -199,7 +199,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
       }
     }
 
-    if (init) init(contextRef.current)
+    if (init && contextRef.current) init(contextRef.current)
   }, [init])
 
   // Start rendering loop
