@@ -32,6 +32,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `gridOffset` prop to `Canvas` component to allow control over the grid position (useful for zoom/scroll operations)
+
 ### Fixed
 
 - `Canvas` component - context check before calling init

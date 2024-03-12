@@ -24,6 +24,7 @@ export interface CanvasProps<Context extends CanvasContext = Context2D>
   fullscreen?: boolean
   hideCursor?: boolean
   frameRate?: number
+  gridOffset?: { x: number; y: number }
   gridSize?: number
   nogrid?: boolean
 }
@@ -47,6 +48,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
   fullscreen,
   hideCursor,
   frameRate,
+  gridOffset,
   gridSize,
   nogrid,
   children,
@@ -270,13 +272,18 @@ const Canvas = <Context extends CanvasContext = Context2D>({
       outline: 'none', // Hide tab-index border
     }
 
+    gridOffset = {
+      x: gridOffset?.x ? gridOffset.x : 0,
+      y: gridOffset?.y ? gridOffset.y : 0,
+    }
     gridSize = gridSize ? gridSize : 20
     const gridHalf = gridSize / 2
+
     const gridStyle: React.CSSProperties = {
       background:
         'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
       backgroundSize: `${gridSize}px ${gridSize}px`,
-      backgroundPosition: `0 0, 0 ${gridHalf}px, ${gridHalf}px ${-gridHalf}px, ${-gridHalf}px 0px`,
+      backgroundPosition: `${gridOffset.x}px ${gridOffset.y}px, ${gridOffset.x}px ${gridOffset.y + gridHalf}px, ${gridOffset.x + gridHalf}px ${gridOffset.y - gridHalf}px, ${gridOffset.x - gridHalf}px ${gridOffset.y}px`,
     }
 
     const currentStyle = { ...rest.style } // User defined styles
