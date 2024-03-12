@@ -30,11 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-## [Unreleased]
+## [Version 1.3.3] 2024-03-11
 
 ### Added
 
-- Added `onContextMenu` callback to prevent default action
+- Added `onContextMenu` callback to prevent default
+
+### Fixed
+
+- `Canvas` component context initialization now handles falling back to `experimental-webgl`. Outputs console warn/error for failed initialization.
 
 ## [Version 1.3.2] 2024-03-11
 

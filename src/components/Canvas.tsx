@@ -174,7 +174,30 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     const canvas = canvasRef.current
     if (!canvas || contextRef.current) return
 
-    contextRef.current = canvas.getContext(type || '2d', attributes) as Context
+    try {
+      contextRef.current = canvas.getContext(
+        type || '2d',
+        attributes,
+      ) as Context
+    } catch (error) {
+      if (type === 'webgl') {
+        console.warn(
+          "WebGL context initialization failed, falling back to 'experimental-webgl'",
+        )
+        try {
+          contextRef.current = canvas.getContext(
+            'experimental-webgl',
+            attributes,
+          ) as Context
+        } catch (error) {
+          console.error('Experimental WebGL initialization failed:', error)
+          return
+        }
+      } else {
+        console.error('Context initialization failed:', error)
+        return
+      }
+    }
 
     if (init) init(contextRef.current)
   }, [init])
