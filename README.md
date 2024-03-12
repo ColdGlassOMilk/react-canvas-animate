@@ -141,11 +141,15 @@ Additional props are defined as:
 
 - `fullscreen` boolean
 
-  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions. Position will also become fixed.
+  Defaults to false. Setting true will adjust canvas dimensions to window inner dimensions, and handle resize events automatically. Position will also become fixed.
 
 - `nogrid` boolean
 
   Setting to true will disable the tiled grid background. _Note: The grid is generated interally through styles, and will not in any way affect image rendering_
+
+- `gridOffset` _{ x: number, y: number }_
+
+  Control the background grid positioning. Useful for zoom & scroll operations.
 
 - `gridSize` number
 
