@@ -12,13 +12,11 @@ export class ObjectManager<
   >,
 > {
   protected objects: Type[] = []
-  protected context: Context
 
   constructor(
-    context: Context,
+    protected context: Context,
     objects: [new (context: Context, state: State) => Type, State][] = [],
   ) {
-    this.context = context
     this.objects = this.createList(objects)
   }
 
@@ -77,12 +75,6 @@ export class ObjectManager<
 
   // Callbacks
   // ---------------
-
-  // render(_props: Props): void {
-  //   for (const object of this.objects) {
-  //     object.callRender(_props)
-  //   }
-  // }
 
   render(): void {
     for (const object of this.objects) {

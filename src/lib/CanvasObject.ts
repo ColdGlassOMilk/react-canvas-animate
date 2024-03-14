@@ -14,12 +14,10 @@ export abstract class CanvasObject<
   Props extends ObjectProps = ObjectProps,
 > implements CanvasObjectInterface
 {
-  protected context: Context
   protected state: State = {} as State
   protected props: Props = {} as Props
 
-  constructor(context: Context, state?: State) {
-    this.context = context
+  constructor(protected context: Context, state?: State) {
     this.state = state as State
   }
 
