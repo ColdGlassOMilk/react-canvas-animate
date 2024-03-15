@@ -268,7 +268,7 @@ A helper class is included to ease in loading image data programmatically. See e
 
 - `CanvasObject` _namespace_
 
-  - `Base` _class_ CanvasObject `<CanvasContext, State, Props>`
+  - `Base` _class_ CanvasObject `<State, Props, Context>`
 
     - `constructor(context: CanvasContext, state: CanvasObject.State)`
     - `this.context` Provides access to the CanvasContext passed during init
@@ -277,12 +277,18 @@ A helper class is included to ease in loading image data programmatically. See e
     - `render(): void` _(optional)_ abstract callback method
     - `update(): void`_(optional)_ abtract callback method. `this.props` is updated by `Manager` prior to callback
 
-  - `Manager` CanvasObjectManager `<CanvasContext, CanvasObject, State, Props>`
+  - `Manager` CanvasObjectManager `State, Props, CanvasContext, CanvasObject>`
 
     - `constructor(context: CanvasContext, objects?: type T[])`
     - `this.objects` _CanvasObject[]_ Access collection of managed objects
     - `render` _void_ Internally calls render() method on all objects
     - `update(props: Props)` _void_ Internally calls update() method on all objects
+
+  - `Component` _abstract class_
+
+  - `Entity` _abstract class_
+
+    - `attachComponents() => Record<string, Component>` Providing a collection of Component types will instantiate the underlying CanvasObjects passing through (context, state). You can then access the components under `this.components`
 
   - `State` _Type_ Record<string, unknown> _{}_
   - `Props` _Type_ Record<string, unknown> _{}_
@@ -308,7 +314,7 @@ interface CatProps extends CanvasObject.Props {
 
 // Then we'll build our custom object
 // We're loading the image directly instead of passing it for sake of brevity
-export class Cat extends CanvasObject.Base<Context2D, CatState, CatProps> {
+export class Cat extends CanvasObject.Base<CatState, CatProps> {
   private images: ImageLoader
 
   constructor(context: Context2D, state: CatState) {
@@ -331,9 +337,9 @@ export class Cat extends CanvasObject.Base<Context2D, CatState, CatProps> {
 
 // Lastly, we'll build a custom Manager for our object type
 export class CatManager extends CanvasObject.Manager<
-  Context2D,
   CatState,
   CatProps,
+  Context2D,
   Cat
 > {}
 ```

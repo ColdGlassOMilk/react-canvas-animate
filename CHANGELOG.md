@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+## [Unreleased]
+
+### Added
+
+- `Component` and `Entity` classes
+
 ## [Version 1.3.4] 2024-03-12
 
 ### Added
