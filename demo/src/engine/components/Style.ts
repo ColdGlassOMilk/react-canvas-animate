@@ -1,7 +1,6 @@
-// import { Context2D } from 'react-canvas-animate'
-import { Component, ComponentState } from './base/Component'
+import { CanvasObject } from 'react-canvas-animate'
 
-export interface StyleState extends ComponentState {
+export interface StyleState extends CanvasObject.State {
   fillStyle?: string
   strokeStyle?: string
   lineWidth?: number
@@ -11,7 +10,7 @@ export interface StyleState extends ComponentState {
   shadowOffsetY?: number
 }
 
-export class Style extends Component<StyleState> {
+export class Style extends CanvasObject.Component<StyleState> {
   // constructor(context: Context2D, state: StyleState) {
   //   super(context, state)
   //   this.state = {

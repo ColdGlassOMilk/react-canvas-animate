@@ -9,15 +9,18 @@ interface CanvasObjectInterface {
 }
 
 export abstract class CanvasObject<
-  Context extends CanvasContext = Context2D,
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
+  Context extends CanvasContext = Context2D,
 > implements CanvasObjectInterface
 {
   protected state: State = {} as State
   protected props: Props = {} as Props
 
-  constructor(protected context: Context, state?: State) {
+  constructor(
+    protected context: Context,
+    state?: State,
+  ) {
     this.state = state as State
   }
 

@@ -2,13 +2,13 @@ import type { CanvasContext, Context2D } from '../components/Canvas'
 import { CanvasObject, ObjectProps, ObjectState } from './CanvasObject'
 
 export class ObjectManager<
-  Context extends CanvasContext = Context2D,
   State extends ObjectState = ObjectState,
   Props extends ObjectProps = ObjectProps,
-  Type extends CanvasObject<Context, ObjectState, ObjectProps> = CanvasObject<
-    Context,
+  Context extends CanvasContext = Context2D,
+  Type extends CanvasObject<ObjectState, ObjectProps, Context> = CanvasObject<
     ObjectState,
-    ObjectProps
+    ObjectProps,
+    Context
   >,
 > {
   protected objects: Type[] = []

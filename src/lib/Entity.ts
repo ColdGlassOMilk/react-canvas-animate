@@ -1,27 +1,25 @@
-import { CanvasObject, Context2D } from 'react-canvas-animate'
-import { Component, ComponentState } from '@/engine/components'
+import { CanvasContext, Context2D } from '../components/Canvas'
+import { CanvasObject, ObjectState, ObjectProps } from './CanvasObject'
+import { Component, ComponentState } from './Component'
 
-// Interface for entity state, without components
-export interface EntityState extends CanvasObject.State {}
+export interface EntityState extends ObjectState {}
+export interface EntityProps extends ObjectProps {}
 
-// Interface for entity props
-export interface EntityProps extends CanvasObject.Props {}
-
-// Abstract class for Entity
 export abstract class Entity<
   State extends EntityState,
   Props extends EntityProps,
-> extends CanvasObject.Base<Context2D, State, Props> {
+  Context extends CanvasContext = Context2D,
+> extends CanvasObject<State, Props, Context> {
   protected components: Record<string, Component> = {}
 
-  constructor(context: Context2D, state: State) {
+  constructor(context: Context, state: State) {
     super(context, state)
     this.instantiateComponents()
   }
 
   abstract attachComponents(): Record<
     string,
-    new (context: Context2D, state: ComponentState) => Component
+    new (context: Context, state: ComponentState) => Component
   >
 
   private instantiateComponents() {

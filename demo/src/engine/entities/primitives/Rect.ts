@@ -1,14 +1,14 @@
-import { Entity, EntityState } from '../base/Entity'
+import { CanvasObject, Context2D } from 'react-canvas-animate'
 import { Style, StyleState } from '../../components'
 
-export interface RectState extends EntityState, StyleState {
+export interface RectState extends CanvasObject.State, StyleState {
   x: number
   y: number
   width: number
   height: number
 }
 
-export class Rect extends Entity<RectState, RectState> {
+export class Rect extends CanvasObject.Entity<RectState, RectState> {
   attachComponents() {
     return {
       style: Style,
@@ -37,3 +37,10 @@ export class Rect extends Entity<RectState, RectState> {
     }
   }
 }
+
+export class RectManager extends CanvasObject.Manager<
+  RectState,
+  any,
+  Context2D,
+  Rect
+> {}

@@ -1,13 +1,12 @@
 import { useRef } from 'react'
 import Canvas, { CanvasProps, Context2D, rgbAngle } from 'react-canvas-animate'
 
-import { Manager } from '../engine/managers'
-import { Rect, RectState } from '../engine/entities/primitives/Rect'
+import { Rect, RectManager } from '../engine/entities/primitives/Rect'
 
 interface RendererProps extends CanvasProps {}
 
 export const Renderer = ({ ...props }: RendererProps) => {
-  const managerRef = useRef<Manager<RectState>>()
+  const managerRef = useRef<RectManager>()
   const blockCount = useRef(0)
 
   const blockSize = 20
@@ -16,7 +15,7 @@ export const Renderer = ({ ...props }: RendererProps) => {
     // const { width, height } = ctx.canvas
     const width = 1500
     const height = 1500
-    managerRef.current = new Manager<RectState>(ctx)
+    managerRef.current = new RectManager(ctx)
 
     for (let y = 0; y < height / blockSize; y++) {
       for (let x = 0; x < width / blockSize; x++) {
