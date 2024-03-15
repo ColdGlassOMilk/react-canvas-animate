@@ -30,11 +30,15 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-## [Unreleased]
+## [Version 1.3.5] 2024-03-15
 
 ### Added
 
 - `Component` and `Entity` classes
+
+### Changed
+
+- Refactored the `Context` type ordering for CanvasObject and manager classes
 
 ## [Version 1.3.4] 2024-03-12
 
