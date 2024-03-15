@@ -6,8 +6,8 @@ export interface EntityState extends ObjectState {}
 export interface EntityProps extends ObjectProps {}
 
 export abstract class Entity<
-  State extends EntityState,
-  Props extends EntityProps,
+  State extends EntityState = EntityState,
+  Props extends EntityProps = EntityProps,
   Context extends CanvasContext = Context2D,
 > extends CanvasObject<State, Props, Context> {
   protected components: Record<string, Component> = {}
@@ -17,14 +17,14 @@ export abstract class Entity<
     this.instantiateComponents()
   }
 
-  abstract attachComponents(): Record<
+  abstract useComponents(): Record<
     string,
     new (context: Context, state: ComponentState) => Component
   >
 
   private instantiateComponents() {
     const state = this.state as State
-    const components = this.attachComponents()
+    const components = this.useComponents()
     Object.entries(components).forEach(([key, ComponentClass]) => {
       this.components[key] = new ComponentClass(this.context, state)
     })

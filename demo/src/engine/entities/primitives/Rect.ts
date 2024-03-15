@@ -8,8 +8,8 @@ export interface RectState extends CanvasObject.State, StyleState {
   height: number
 }
 
-export class Rect extends CanvasObject.Entity<RectState, RectState> {
-  attachComponents() {
+export class Rect extends CanvasObject.Entity<RectState> {
+  useComponents() {
     return {
       style: Style,
     }
