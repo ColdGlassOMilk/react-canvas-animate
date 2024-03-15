@@ -1,8 +1,7 @@
-import { Context2D } from 'react-canvas-animate'
-import { Entity } from '../base/Entity'
+import { Entity, EntityState } from '../base/Entity'
 import { Style, StyleState } from '../../components'
 
-export interface RectState extends StyleState {
+export interface RectState extends EntityState, StyleState {
   x: number
   y: number
   width: number
@@ -10,16 +9,15 @@ export interface RectState extends StyleState {
 }
 
 export class Rect extends Entity<RectState, RectState> {
-  protected style: Style
-
-  constructor(context: Context2D, state: RectState) {
-    super(context, state)
-    this.style = new Style(context, state)
+  attachComponents() {
+    return {
+      style: Style,
+    }
   }
 
   render() {
     const ctx = this.context
-    this.style.render()
+    this.components.style.render()
     if (this.state.fillStyle) {
       ctx.fillRect(
         this.state.x,
