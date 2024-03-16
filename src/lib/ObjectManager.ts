@@ -2,8 +2,8 @@ import type { CanvasContext, Context2D } from '../components/Canvas'
 import { CanvasObject, ObjectProps, ObjectState } from './CanvasObject'
 
 export class ObjectManager<
-  State extends ObjectState = ObjectState,
-  Props extends ObjectProps = ObjectProps,
+  State extends ObjectState = any,
+  Props extends ObjectProps = any,
   Context extends CanvasContext = Context2D,
   Type extends CanvasObject<ObjectState, ObjectProps, Context> = CanvasObject<
     ObjectState,

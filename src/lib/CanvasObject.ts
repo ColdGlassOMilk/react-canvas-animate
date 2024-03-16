@@ -9,8 +9,8 @@ interface CanvasObjectInterface {
 }
 
 export abstract class CanvasObject<
-  State extends ObjectState = ObjectState,
-  Props extends ObjectProps = ObjectProps,
+  State extends ObjectState = any,
+  Props extends ObjectProps = any,
   Context extends CanvasContext = Context2D,
 > implements CanvasObjectInterface
 {

@@ -6,8 +6,8 @@ export interface EntityState extends ObjectState {}
 export interface EntityProps extends ObjectProps {}
 
 export abstract class Entity<
-  State extends EntityState = EntityState,
-  Props extends EntityProps = EntityProps,
+  State extends EntityState = any,
+  Props extends EntityProps = any,
   Context extends CanvasContext = Context2D,
 > extends CanvasObject<State, Props, Context> {
   protected components: Record<string, Component> = {}

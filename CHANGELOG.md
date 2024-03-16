@@ -30,6 +30,12 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
+### [Unreleased]
+
+### Fixed
+
+- Refactored CanvasObject default state and props to 'any' type. Fixes type constraint issues with deeply nested object inheritance.
+
 ## [Version 1.3.5] 2024-03-15
 
 ### Added
