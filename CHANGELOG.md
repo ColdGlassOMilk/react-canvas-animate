@@ -30,7 +30,13 @@ All notable changes to this project will be documented in this file.
 - [Bug fix 1]
 - [Bug fix 2] -->
 
-### [Version 1.3.6] 2024-03.18
+### [Version 1.3.7] 2024-03-20
+
+### Added
+
+- Added windowEvents to Canvas component
+
+### [Version 1.3.6] 2024-03-18
 
 ### Fixed
 

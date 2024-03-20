@@ -123,7 +123,9 @@ export default function App() {
 
 - `documentEvents` { handleEvent: (event: Event) => void, eventTypes: string[] }
 
-  Functions the same as `events`, but attaches to the document instead of the canvas element.
+- `windowEvents` { handleEvent: (event: Event) => void, eventTypes: string[] }
+
+  Functions the same as `events`, but attaches to the document/window instead of the canvas element.
 
 #### Props
 
@@ -379,6 +381,72 @@ export default function Nyan() {
 ```
 
 Get Creative! These classes lend themselves to being quite flexible.
+
+## Component/Entity
+
+The `CanvasObject` module also includes some base component/entity classes, here is a basic example:
+
+```typescript
+import { CanvasObject } from 'react-canvas-animate'
+
+// First, we'll define a component state to represent Style
+interface StyleState extends CanvasObject.State {
+  style?: {
+    fill?: string
+  }
+}
+
+// Then we'll pass that state type to a component class
+class StyleComponent extends CanvasObject.Component<StyleState> {
+  render() {
+    const ctx = this.context
+    ctx.fillStyle = this.state.style?.fill || ctx.fillStyle
+  }
+}
+
+// Next, we'll define an Entity state to represent a rectangle
+// We'll extend StyleState to include the component options
+interface RectState extends CanvasObject.State, StyleState {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+// Then, we'll define our Rect Entity class
+class Rect extends CanvasObject.Entity<RectState> {
+  useComponents() {
+    return {
+      style: StyleComponent,
+    }
+  }
+
+  render() {
+    const { x, y, width, height } = this.state
+    const ctx = this.context
+    this.components.style.render()
+    ctx.fillRect(x, y, width, height)
+  }
+}
+
+// Lastly, we'll make a custom manager for our Entity class
+class RectManager extends CanvasObject.Manager<RectState> {}
+
+// Then we can use the factory method to render a red rectangle
+const rectManager = new RectManager()
+rectManager.create(Rect, {
+  x: 50,
+  y: 50,
+  width: 100,
+  height: 100,
+  style: {
+    fill: 'red',
+  },
+})
+
+// ...
+rectManager.render()
+```
 
 ## Helpers
 

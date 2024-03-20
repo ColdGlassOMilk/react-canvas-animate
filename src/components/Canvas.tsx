@@ -21,6 +21,7 @@ export interface CanvasProps<Context extends CanvasContext = Context2D>
   attributes?: Record<string, unknown>
   events?: CanvasEventCallback
   documentEvents?: CanvasEventCallback
+  windowEvents?: CanvasEventCallback
   fullscreen?: boolean
   hideCursor?: boolean
   frameRate?: number
@@ -45,6 +46,7 @@ const Canvas = <Context extends CanvasContext = Context2D>({
   attributes,
   events,
   documentEvents,
+  windowEvents,
   fullscreen,
   hideCursor,
   frameRate,
@@ -168,6 +170,14 @@ const Canvas = <Context extends CanvasContext = Context2D>({
     [documentEvents],
   )
 
+  // Callback for handling window events
+  const windowEventHandler = useCallback(
+    (event: Event) => {
+      if (windowEvents) windowEvents.handleEvent(event)
+    },
+    [windowEvents],
+  )
+
   // Effect Hooks
   // --------------
 
@@ -261,6 +271,28 @@ const Canvas = <Context extends CanvasContext = Context2D>({
 
     return () => removeEventListeners()
   }, [documentEvents, documentEventHandler])
+
+  // Handle window events
+  useEffect(() => {
+    const context = contextRef.current
+    if (!windowEvents || !context) return
+
+    const addEventListeners = () => {
+      windowEvents.eventTypes.forEach((eventType) => {
+        window.addEventListener(eventType, windowEventHandler)
+      })
+    }
+
+    const removeEventListeners = () => {
+      windowEvents.eventTypes.forEach((eventType) => {
+        window.removeEventListener(eventType, windowEventHandler)
+      })
+    }
+
+    addEventListeners()
+
+    return () => removeEventListeners()
+  }, [windowEvents, windowEventHandler])
 
   // Build canvas styles
   // --------------
